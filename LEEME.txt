@@ -1,0 +1,20 @@
+Aquí van las fotos de las citas.
+
+Nómbralas EXACTAMENTE así (todo en minúsculas, sin acentos ni espacios):
+
+  cine.jpg
+  picnic.jpg
+  playa.jpg
+  museo.jpg
+  acuario.jpg
+  pijamada.jpg
+  cafe.jpg
+  outfits.jpg
+  photobooth.jpg
+  pintar.jpg
+  cena.jpg
+  baile.jpg
+  cocinar.jpg
+
+También funcionan .png y .webp si prefieres.
+Si falta alguna, esa postal se queda con el dibujo. No pasa nada.
