@@ -5,11 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="color-scheme" content="dark light">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext y='26' font-size='26'%3E%F0%9F%8C%99%3C/text%3E%3C/svg%3E">
-<title>Nuestra Luna</title>
+<title>Nuestra Bella Historia</title>
 <style>html,body{margin:0}img{max-width:100%}</style>
 </head>
 <body>
-<title>Nuestra Luna</title>
+<title>Nuestra Bella Historia</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;1,9..144,400;1,9..144,500;1,9..144,600&family=Poppins:wght@300;400;500;600&family=Caveat:wght@500;600&family=Gowun+Batang:wght@400;700&family=Gowun+Dodum&family=Gaegu:wght@400;700&display=swap">
@@ -948,7 +948,7 @@
         <circle cx="128" cy="152" r="5.5" fill="#f6dfb0" opacity=".32"/>
       </svg>
       <button class="chr-btn moon-usagi" id="usagiBtn" type="button" aria-label="우사기 쓰다듬기 / acariciar a Usagi"></button>
-      <p class="poke-hint" lang="ko">우사기를 눌러봐 🐰 · tócala</p>
+      <p class="poke-hint" lang="ko">누르렴, 우리 작은 고양이야 🐰 · tócala</p>
     </div>
 
     <h1><span class="kr" lang="ko">같은 달 아래, 한 달</span></h1>
@@ -1779,7 +1779,7 @@
 
   /* se arma en cada toque: la frase del aniversario solo aparece el día que de verdad cumplimos mes */
   function lineasUsagi(){
-    var l = ['보고 싶었어!','헤헤… 간지러워','너 생각하고 있었어','한 번 더 눌러줘','라벤더 줄까? 💜','나 여기 있어, 항상'];
+    var l = ['보고 싶었어! 🥺','헤헤… 간지러워 🤭','너 생각하고 있었어 🥰','한 번 더 눌러줘! 😊','아름다운 라벤더 꽃을 받아보시겠어요? 💜','나 여기 있어, 항상 💖'];
     if(esAniversarioMensual()) l.splice(2, 0, '오늘 ' + textoAniversario(mesesJuntos()) + '이야 🌙');
     return l;
   }
@@ -2273,19 +2273,19 @@
   };
 
   var POSTCARDS = [
-    {k:'cine',    tk:'영화관',      te:'el cine',      kr:'팝콘 하나 나눠 먹고, 무서운 장면에선 네 손 잡아줄게.', es:'Compartir unas palomitas, y darte la mano en las partes que dan miedo.', em:['🍿','🎬','🎟️']},
-    {k:'picnic',  tk:'소풍',        te:'un picnic',    kr:'잔디밭에 담요 깔고, 해 질 때까지 아무것도 안 하기.',     es:'Una manta en el pasto y no hacer nada hasta que se meta el sol.',        em:['🧺','🥪','🌷','🌿']},
+    {k:'cine',    tk:'영화관',      te:'el cine',      kr:'팝콘 하나 나눠 먹고, 무서운 장면에선 네 손 잡아줄게.', es:'Compartir unas palomitas, y darte la mano en las partes que dan miedo.',  em:['🍿','🎬','🎟️']},
+    {k:'picnic',  tk:'소풍',        te:'un picnic',    kr:'잔디 위에 담요를 깔고, 해가 지기 전까지는 네 곁에 있지 않는 것.', es:'Una manta en el pasto y no estar a tu lado hasta que se meta el sol.',    em:['🧺','🥪','🌷','🌿']},
     {k:'playa',   tk:'바다',        te:'la playa',     kr:'맨발로 파도 밟기. 조개껍데기 주워서 너한테 주기.',        es:'Pisar las olas descalzos, y juntarte conchitas.',                        em:['🐚','🌊','☀️']},
     {k:'museo',   tk:'박물관',      te:'un museo',     kr:'그림 하나 앞에 한참 서 있기. 네가 뭘 좋아하는지 배우기.', es:'Quedarnos parados frente a un cuadro, y aprenderme lo que te gusta.',    em:['🖼️','🎨','🏛️']},
-    {k:'acuario', tk:'아쿠아리움',  te:'el acuario',   kr:'파란 유리 앞에서 물고기처럼 둘 다 조용해지기.',           es:'Callarnos los dos frente al vidrio azul, igual que los peces.',          em:['🐠','🫧','🐙']},
-    {k:'pijamada',tk:'파자마 파티', te:'una pijamada', kr:'커플 잠옷 입고, 새벽까지 쓸데없는 얘기 하기.',            es:'Pijamas a juego, y hablar tonterías hasta la madrugada.',                em:['🌙','🧸','💤']},
+    {k:'acuario', tk:'아쿠아리움',  te:'el acuario',   kr:'파란 유리창 앞에서 물고기들처럼 둘 다 조용히 있다가, 가끔씩 키스를 나누는 것.',   es:'Callarnos los dos frente al vidrio azul, igual que los peces, y darnos uno que otro beso.',    em:['🐠','🫧','🐙']},
+    {k:'pijamada',tk:'파자마 파티', te:'una pijamada', kr:'세트로 된 잠옷을 입고, 온갖 이야기를 나누며 새벽까지 네 아름다운 눈을 바라보는 것.',  es:'Pijamas a juego, hablar de mil cosas y mirar tus bellos ojos hasta la madrugada.',   em:['🌙','🧸','💤']},
     {k:'cafe',    tk:'디저트 카페',  te:'café y postres', kr:'예쁜 카페 찾아가서, 맛있는 디저트 하나씩 다 나눠 먹기.', es:'Buscar una cafetería bonita y compartir todos los postres ricos.',      em:['🍰','🧁','☕','🍮']},
-    {k:'outfits', tk:'커플룩',      te:'ropa a juego', kr:'커플룩 맞춰 입고, 사람들 앞에서 하나도 안 부끄러워하기.',  es:'Vestirnos a juego y no darnos ni tantita pena.',                         em:['👕','👗','💞','🧦']},
-    {k:'photobooth', tk:'인생네컷', te:'la cabina de fotos',  kr:'네 컷 다 웃긴 표정으로 찍고, 한 장씩 나눠 갖기.',          es:'Las cuatro fotos con caras ridículas, y una para cada quien.',           em:['📸','✨','🖼️','😆']},
+    {k:'outfits', tk:'커플룩',      te:'ropa a juego', kr:'똑같은 옷을 입고 손을 잡고 도시를 거닐기.',                es:'Vestirnos igual y recorrer la ciudad tomados de la mano.',              em:['👕','👗','💞','🧦']},
+    {k:'photobooth', tk:'인생네컷', te:'la cabina de fotos',  kr:'함께 예쁜 사진을 찍어서 영원히 간직할 추억으로 남기자.', es:'Tomarnos fotos bonitas juntos y que queden como un recuerdo para siempre.',    em:['📸','✨','🖼️','😆']},
     {k:'pintar',  tk:'그림 그리기', te:'pintar juntos', kr:'같이 그림 그리기. 서로 그려주고, 못 그려도 웃기.',         es:'Pintar juntos, retratarnos, y reírnos aunque nos salga horrible.',       em:['🎨','🖌️','🌈','🖼️']},
     {k:'cena',    tk:'저녁 식사',   te:'una cena',     kr:'촛불 하나, 접시 두 개, 그리고 너.',                        es:'Una vela, dos platos, y tú.',                                           em:['🍝','🍷','🕯️']},
     {k:'baile',   tk:'춤',          te:'bailar',       kr:'네 방에서든 어디서든, 노래 하나에 같이 흔들기.',           es:'Bailar una canción, en tu cuarto o donde sea.',                          em:['💃','🎶','✨']},
-    {k:'cocinar', tk:'요리',        te:'cocinar',      kr:'같이 만들고, 뭔가 태우고, 그래도 같이 웃기.',              es:'Cocinar juntos, quemar algo, y reírnos igual.',                          em:['🍳','🥄','🥕']}
+    {k:'cocinar', tk:'요리',        te:'cocinar',      kr:'함께 맛있는 음식을 만들고, 서로의 시간을 즐기며, 디저트도 맛보자!',  es:'Cocinar juntos algo rico, disfrutar de nuestra compañía, ¡y del postre!.',  em:['🍳','🥄','🥕']}
   ];
 
   function popBurst(el, emojis){
