@@ -224,11 +224,35 @@
   .es-block .ps{font-family:var(--font-body);font-style:italic;font-size:.88rem;}
 
   /* ================= postales ================= */
-  .postcard-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:1.1rem;margin-top:2.2rem;}
+  .pc-carousel{--cw:clamp(226px,46vw,320px);position:relative;margin-top:2.2rem;}
+  .postcard-grid{position:relative;height:clamp(310px,58vw,412px);perspective:1500px;
+    transform-style:preserve-3d;touch-action:pan-y;}
   .postcard{
-    position:relative;background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;
+    position:absolute;top:0;left:50%;width:var(--cw);margin-left:calc(var(--cw) / -2);
+    background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;
     aspect-ratio:4/3.35;perspective:1000px;
+    transition:transform .58s cubic-bezier(.32,.9,.3,1), opacity .45s ease, filter .45s ease;
+    will-change:transform,opacity;
   }
+  .postcard.far{opacity:0;pointer-events:none;}
+  .postcard.side{filter:saturate(.78) brightness(.82);}
+  .pc-nav{
+    position:absolute;top:44%;z-index:20;width:44px;height:44px;border-radius:50%;cursor:pointer;
+    display:grid;place-items:center;font-size:1.4rem;line-height:1;
+    border:1px solid var(--card-border);background:var(--glass);color:var(--ink-900);
+    backdrop-filter:blur(8px);box-shadow:var(--card-shadow);transition:transform .15s,filter .2s;
+  }
+  .pc-nav:hover{transform:scale(1.08);filter:brightness(1.15);}
+  .pc-nav.prev{left:0;}
+  .pc-nav.next{right:0;}
+  .pc-dots{display:flex;gap:.42rem;justify-content:center;flex-wrap:wrap;margin-top:1.3rem;}
+  .pc-dots button{
+    width:8px;height:8px;padding:0;border-radius:50%;cursor:pointer;border:none;
+    background:var(--card-border);transition:background .25s,transform .25s,width .25s;
+  }
+  .pc-dots button.on{background:var(--sec,var(--lavender-500));width:22px;border-radius:99px;}
+  .pc-hint{text-align:center;font-family:var(--font-kr-body);font-size:.8rem;color:var(--ink-500);margin:.9rem 0 0;}
+  @media (prefers-reduced-motion: reduce){ .postcard{transition:none;} }
   .pc-inner{position:absolute;inset:0;transform-style:preserve-3d;transition:transform .62s cubic-bezier(.4,.16,.2,1);}
   .postcard.flipped .pc-inner{transform:rotateY(180deg);}
   .pc-face{
@@ -663,6 +687,32 @@
   .cr-slot{flex:0 1 auto;max-width:46%;transition:opacity .3s ease, transform .3s ease;}
   .cr-slot .chr-svg{width:min(40vw,170px);}
   .cr-slot.dim{opacity:.55;transform:scale(.9);}
+
+  /* ================= adornos del papel ================= */
+  .letter-paper{padding:clamp(2.6rem,6vw,4rem) clamp(1.8rem,6vw,3.6rem);}
+  .paper-frame{position:absolute;inset:13px;pointer-events:none;
+    border:1px solid rgba(168,120,146,.42);border-radius:3px;}
+  .paper-frame::before{content:"";position:absolute;inset:5px;border:1px solid rgba(168,120,146,.20);border-radius:2px;}
+  .paper-corner{position:absolute;width:clamp(40px,9vw,62px);height:auto;pointer-events:none;opacity:.9;}
+  .paper-corner.tl{top:8px;left:8px;}
+  .paper-corner.tr{top:8px;right:8px;transform:scaleX(-1);}
+  .paper-corner.bl{bottom:8px;left:8px;transform:scaleY(-1);}
+  .paper-corner.br{bottom:8px;right:8px;transform:scale(-1,-1);}
+  .paper-mark{position:absolute;left:50%;top:50%;width:min(230px,46%);transform:translate(-50%,-50%);
+    opacity:.045;pointer-events:none;}
+  .paper-edge{position:absolute;left:0;right:0;height:12px;pointer-events:none;opacity:.55;}
+  .paper-edge.top{top:-1px;}
+  .paper-edge.bot{bottom:-1px;transform:scaleY(-1);}
+  /* solo el contenido va en flujo; los adornos siguen absolutos */
+  .letter-paper > .letter,
+  .letter-paper > .paper-orn,
+  .letter-paper > .paper-seal{position:relative;z-index:1;}
+  .paper-frame,.paper-corner,.paper-mark,.paper-edge{z-index:0;}
+
+  .letter-paper .salute{font-size:1.28em;letter-spacing:.01em;}
+  .letter-paper .salute::after{content:"";display:block;width:64px;height:2px;margin-top:.5rem;
+    background:linear-gradient(90deg,rgba(200,120,158,.85),rgba(200,120,158,0));border-radius:2px;}
+  .paper-seal{display:block;width:74px;margin:1.8rem auto 0;}
 </style>
 
 <canvas id="sparkles" aria-hidden="true"></canvas>
@@ -1027,6 +1077,14 @@
     </div>
 
     <div class="letter-paper" id="letterPaper" hidden>
+      <div class="paper-frame"></div>
+      <svg class="paper-corner tl" viewBox="0 0 70 70" aria-hidden="true"><path d="M4 66 C4 34 14 14 46 6" fill="none" stroke="#c88fa6" stroke-width="1.6" opacity=".85"/><path d="M10 66 C10 40 20 22 46 14" fill="none" stroke="#c9b08a" stroke-width="1.2" opacity=".6"/><g fill="#e0a8bd"><circle cx="46" cy="6" r="4.2"/><circle cx="52.5" cy="9" r="3"/><circle cx="41" cy="10" r="2.6"/></g><circle cx="46" cy="6" r="1.8" fill="#f6e2a8"/><g fill="#a9c39c"><ellipse cx="22" cy="26" rx="7" ry="3.2" transform="rotate(-42 22 26)"/><ellipse cx="13" cy="44" rx="6" ry="2.8" transform="rotate(-68 13 44)"/></g><g fill="#d5b8ea"><circle cx="30" cy="17" r="2.8"/><circle cx="17" cy="35" r="2.4"/><circle cx="8" cy="55" r="2"/></g></svg>
+      <svg class="paper-corner tr" viewBox="0 0 70 70" aria-hidden="true"><path d="M4 66 C4 34 14 14 46 6" fill="none" stroke="#c88fa6" stroke-width="1.6" opacity=".85"/><path d="M10 66 C10 40 20 22 46 14" fill="none" stroke="#c9b08a" stroke-width="1.2" opacity=".6"/><g fill="#e0a8bd"><circle cx="46" cy="6" r="4.2"/><circle cx="52.5" cy="9" r="3"/><circle cx="41" cy="10" r="2.6"/></g><circle cx="46" cy="6" r="1.8" fill="#f6e2a8"/><g fill="#a9c39c"><ellipse cx="22" cy="26" rx="7" ry="3.2" transform="rotate(-42 22 26)"/><ellipse cx="13" cy="44" rx="6" ry="2.8" transform="rotate(-68 13 44)"/></g><g fill="#d5b8ea"><circle cx="30" cy="17" r="2.8"/><circle cx="17" cy="35" r="2.4"/><circle cx="8" cy="55" r="2"/></g></svg>
+      <svg class="paper-corner bl" viewBox="0 0 70 70" aria-hidden="true"><path d="M4 66 C4 34 14 14 46 6" fill="none" stroke="#c88fa6" stroke-width="1.6" opacity=".85"/><path d="M10 66 C10 40 20 22 46 14" fill="none" stroke="#c9b08a" stroke-width="1.2" opacity=".6"/><g fill="#e0a8bd"><circle cx="46" cy="6" r="4.2"/><circle cx="52.5" cy="9" r="3"/><circle cx="41" cy="10" r="2.6"/></g><circle cx="46" cy="6" r="1.8" fill="#f6e2a8"/><g fill="#a9c39c"><ellipse cx="22" cy="26" rx="7" ry="3.2" transform="rotate(-42 22 26)"/><ellipse cx="13" cy="44" rx="6" ry="2.8" transform="rotate(-68 13 44)"/></g><g fill="#d5b8ea"><circle cx="30" cy="17" r="2.8"/><circle cx="17" cy="35" r="2.4"/><circle cx="8" cy="55" r="2"/></g></svg>
+      <svg class="paper-corner br" viewBox="0 0 70 70" aria-hidden="true"><path d="M4 66 C4 34 14 14 46 6" fill="none" stroke="#c88fa6" stroke-width="1.6" opacity=".85"/><path d="M10 66 C10 40 20 22 46 14" fill="none" stroke="#c9b08a" stroke-width="1.2" opacity=".6"/><g fill="#e0a8bd"><circle cx="46" cy="6" r="4.2"/><circle cx="52.5" cy="9" r="3"/><circle cx="41" cy="10" r="2.6"/></g><circle cx="46" cy="6" r="1.8" fill="#f6e2a8"/><g fill="#a9c39c"><ellipse cx="22" cy="26" rx="7" ry="3.2" transform="rotate(-42 22 26)"/><ellipse cx="13" cy="44" rx="6" ry="2.8" transform="rotate(-68 13 44)"/></g><g fill="#d5b8ea"><circle cx="30" cy="17" r="2.8"/><circle cx="17" cy="35" r="2.4"/><circle cx="8" cy="55" r="2"/></g></svg>
+      <svg class="paper-edge top" viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0 11 q10 -9 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#dcb9c9" stroke-width="1.3" opacity=".7"/></svg>
+      <svg class="paper-edge bot" viewBox="0 0 400 12" preserveAspectRatio="none" aria-hidden="true"><path d="M0 11 q10 -9 20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0 t20 0" fill="none" stroke="#dcb9c9" stroke-width="1.3" opacity=".7"/></svg>
+      <svg class="paper-mark" viewBox="0 0 200 200" aria-hidden="true"><g fill="#8a4f6e"><g><ellipse cx="100" cy="58" rx="17" ry="30"/><ellipse cx="132" cy="80" rx="17" ry="30" transform="rotate(72 132 80)"/><ellipse cx="120" cy="122" rx="17" ry="30" transform="rotate(144 120 122)"/><ellipse cx="80" cy="122" rx="17" ry="30" transform="rotate(216 80 122)"/><ellipse cx="68" cy="80" rx="17" ry="30" transform="rotate(288 68 80)"/></g><circle cx="100" cy="96" r="13"/><path d="M100 132 v52 M100 150 q-22 -6 -30 -22 M100 164 q22 -6 30 -22" stroke="#8a4f6e" stroke-width="4" fill="none" stroke-linecap="round"/></g></svg>
       <svg class="paper-orn" viewBox="0 0 220 26" aria-hidden="true"><path d="M10 20 q26 -16 52 0 q26 -16 52 0 q26 -16 52 0 q26 -16 44 0" fill="none" stroke="#d9a8bd" stroke-width="1.6"/><g fill="#e3b6c8"><circle cx="36" cy="12" r="3.2"/><circle cx="88" cy="12" r="3.2"/><circle cx="140" cy="12" r="3.2"/><circle cx="192" cy="12" r="3.2"/></g><g fill="#c9dcc0"><ellipse cx="62" cy="16" rx="5" ry="2.4"/><ellipse cx="114" cy="16" rx="5" ry="2.4"/><ellipse cx="166" cy="16" rx="5" ry="2.4"/></g></svg>
     <div class="letter">
       <p class="salute" lang="ko">나의 예쁘고 아름다운 휘에게,</p>
@@ -1065,6 +1123,7 @@
         <p class="ps" lang="es">Con amor, tu novio que te ama, con todo el corazón.</p>
       </div>
     </div>
+      <svg class="paper-seal" viewBox="0 0 80 80" aria-hidden="true"><circle cx="40" cy="40" r="30" fill="#e08fa8"/><circle cx="40" cy="40" r="30" fill="none" stroke="#c4708c" stroke-width="2.5"/><circle cx="40" cy="40" r="24" fill="none" stroke="#f3bfd0" stroke-width="1.4" stroke-dasharray="3 3"/><path d="M40 31 c-3 -6 -12 -5 -12 2 0 5.5 7 9.5 12 14 5 -4.5 12 -8.5 12 -14 0 -7 -9 -8 -12 -2 z" fill="#fbe4ec"/><g fill="#c4708c"><circle cx="40" cy="12" r="2.4"/><circle cx="40" cy="68" r="2.4"/><circle cx="12" cy="40" r="2.4"/><circle cx="68" cy="40" r="2.4"/></g></svg>
       <svg class="paper-orn bottom" viewBox="0 0 220 26" aria-hidden="true"><path d="M10 20 q26 -16 52 0 q26 -16 52 0 q26 -16 52 0 q26 -16 44 0" fill="none" stroke="#d9a8bd" stroke-width="1.6"/><g fill="#e3b6c8"><circle cx="36" cy="12" r="3.2"/><circle cx="88" cy="12" r="3.2"/><circle cx="140" cy="12" r="3.2"/><circle cx="192" cy="12" r="3.2"/></g><g fill="#c9dcc0"><ellipse cx="62" cy="16" rx="5" ry="2.4"/><ellipse cx="114" cy="16" rx="5" ry="2.4"/><ellipse cx="166" cy="16" rx="5" ry="2.4"/></g></svg>
     </div>
   </section>
@@ -1077,7 +1136,13 @@
       <span class="kr" lang="ko">아직 해보지 않은 데이트들이야. 한 장씩 눌러서 뒤집어봐.</span>
       <span class="cap-es" lang="es">Trece postales de citas que todavía no tenemos. Toca cada una para voltearla.</span>
     </p>
-    <div class="postcard-grid" id="postcardGrid"></div>
+    <div class="pc-carousel" id="pcCarousel">
+      <div class="postcard-grid" id="postcardGrid"></div>
+      <button type="button" class="pc-nav prev" id="pcPrev" aria-label="anterior">‹</button>
+      <button type="button" class="pc-nav next" id="pcNext" aria-label="siguiente">›</button>
+    </div>
+    <div class="pc-dots" id="pcDots"></div>
+    <p class="pc-hint" lang="ko">가운데 엽서를 누르면 뒤집혀 · toca la del centro para voltearla</p>
   </section>
 
 
@@ -2160,12 +2225,106 @@
         '</span>' +
       '</span>';
     card.addEventListener('click', function(){
+      if(dragMoved) return;
+      if(i !== active){ goTo(i); return; }      /* si no está al centro, la traemos */
       card.classList.toggle('flipped');
-      if(card.classList.contains('flipped')) popBurst(card, c.em);
+      if(card.classList.contains('flipped')){ popBurst(card, c.em); pauseAuto(9000); }
     });
     pcGrid.appendChild(card);
     loadPhoto(card.querySelector('.pc-art'));
   });
+
+  /* ---------- carrusel ---------- */
+  var cards = Array.prototype.slice.call(pcGrid.querySelectorAll('.postcard'));
+  var N = cards.length, active = 0, autoTimer = null, resumeTimer = null, dragMoved = false;
+  var dots = document.getElementById('pcDots');
+
+  cards.forEach(function(_, i){
+    var d = document.createElement('button');
+    d.type = 'button';
+    d.setAttribute('aria-label', 'postal ' + (i+1));
+    d.addEventListener('click', function(){ goTo(i); pauseAuto(9000); });
+    dots.appendChild(d);
+  });
+  var dotEls = Array.prototype.slice.call(dots.children);
+
+  function layout(){
+    cards.forEach(function(card, i){
+      var off = i - active;
+      if(off >  N/2) off -= N;
+      if(off < -N/2) off += N;
+      var a = Math.abs(off);
+      card.classList.toggle('far', a > 2);
+      card.classList.toggle('side', a > 0 && a <= 2);
+      if(a > 2){
+        card.style.transform = 'translateX(' + (off > 0 ? 150 : -150) + '%) scale(.6)';
+        card.style.zIndex = 0;
+        return;
+      }
+      var x = off * 46;
+      var scale = 1 - a * 0.14;
+      var rot = off * -24;
+      card.style.transform =
+        'translateX(' + x + '%) translateZ(' + (-a * 110) + 'px) rotateY(' + rot + 'deg) scale(' + scale + ')';
+      card.style.opacity = a === 0 ? 1 : (a === 1 ? .92 : .6);
+      card.style.zIndex = 10 - a;
+      card.setAttribute('aria-hidden', a === 0 ? 'false' : 'true');
+      if(a !== 0) card.classList.remove('flipped');
+    });
+    dotEls.forEach(function(d, i){ d.classList.toggle('on', i === active); });
+  }
+
+  function goTo(i){ active = ((i % N) + N) % N; layout(); }
+  function next(){ goTo(active + 1); }
+  function prev(){ goTo(active - 1); }
+
+  function startAuto(){
+    if(reduceMotion) return;
+    clearInterval(autoTimer);
+    autoTimer = setInterval(function(){
+      if(document.hidden) return;
+      if(cards[active].classList.contains('flipped')) return;
+      next();
+    }, 5200);
+  }
+  function pauseAuto(ms){
+    clearInterval(autoTimer);
+    clearTimeout(resumeTimer);
+    resumeTimer = setTimeout(startAuto, ms || 6000);
+  }
+
+  document.getElementById('pcNext').addEventListener('click', function(){ next(); pauseAuto(); });
+  document.getElementById('pcPrev').addEventListener('click', function(){ prev(); pauseAuto(); });
+  pcGrid.addEventListener('mouseenter', function(){ clearInterval(autoTimer); });
+  pcGrid.addEventListener('mouseleave', function(){ startAuto(); });
+
+  /* arrastrar o deslizar con el dedo */
+  var dragX = null;
+  pcGrid.addEventListener('pointerdown', function(e){ dragX = e.clientX; dragMoved = false; });
+  pcGrid.addEventListener('pointermove', function(e){
+    if(dragX === null) return;
+    if(Math.abs(e.clientX - dragX) > 12) dragMoved = true;
+  });
+  function endDrag(e){
+    if(dragX === null) return;
+    var dx = e.clientX - dragX;
+    dragX = null;
+    if(Math.abs(dx) > 45){ (dx < 0 ? next : prev)(); pauseAuto(); }
+    setTimeout(function(){ dragMoved = false; }, 60);
+  }
+  pcGrid.addEventListener('pointerup', endDrag);
+  pcGrid.addEventListener('pointercancel', function(){ dragX = null; dragMoved = false; });
+
+  document.addEventListener('keydown', function(e){
+    if(!pcGrid.getBoundingClientRect().height) return;
+    var r = pcGrid.getBoundingClientRect();
+    if(r.bottom < 0 || r.top > window.innerHeight) return;
+    if(e.key === 'ArrowRight'){ next(); pauseAuto(); }
+    if(e.key === 'ArrowLeft'){ prev(); pauseAuto(); }
+  });
+
+  layout();
+  startAuto();
 
 
   /* ================= reunion ================= */
