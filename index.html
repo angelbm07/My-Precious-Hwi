@@ -237,11 +237,23 @@
     border:1px solid var(--card-border);
   }
   .pc-front{background:#fdf9f0;display:flex;flex-direction:column;}
-  .pc-art{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#efe7f2;}
+  .pc-art{position:relative;flex:1 1 auto;min-height:0;overflow:hidden;background:#e9e0f0;}
   .pc-art svg{width:100%;height:100%;display:block;}
-  .pc-photo{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
+  .pc-photo,.pc-blur{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:none;}
   .pc-art.has-photo .pc-photo{display:block;}
   .pc-art.has-photo svg{visibility:hidden;}
+  /* si la foto viene muy distinta al marco, se ve completa sobre una copia
+     desenfocada, así nunca se recorta nada importante ni quedan barras vacías */
+  .pc-art.fit-contain .pc-blur{display:block;filter:blur(20px) saturate(1.15) brightness(.95);transform:scale(1.2);}
+  .pc-art.fit-contain .pc-photo{object-fit:contain;}
+  /* velo cálido para que cualquier foto pegue con la paleta */
+  .pc-art.has-photo::after{
+    content:"";position:absolute;inset:0;pointer-events:none;
+    background:linear-gradient(180deg, rgba(255,214,224,.16), rgba(150,112,196,.20));
+    mix-blend-mode:soft-light;
+  }
+  /* el pie siempre mide lo mismo, así el marco de la foto es idéntico en todas */
+  .pc-caption{height:3.05rem;display:flex;flex-direction:column;justify-content:center;}
   .pc-stamp{
     position:absolute;top:.5rem;right:.5rem;width:26px;height:32px;border-radius:3px;
     background:repeating-linear-gradient(45deg,#f6d0e0,#f6d0e0 4px,#fbe6ee 4px,#fbe6ee 8px);
@@ -278,8 +290,13 @@
   }
 
   /* ================= playlist ================= */
-  .pl-wrap{position:relative;border-radius:20px;overflow:hidden;box-shadow:var(--card-shadow);
-           border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(8px);}
+  .pl-open{display:flex;align-items:center;gap:1rem;width:100%;cursor:pointer;text-align:left;
+    padding:1.4rem 1.5rem;border-radius:20px;border:1px solid var(--card-border);
+    background:var(--card-bg);backdrop-filter:blur(8px);box-shadow:var(--card-shadow);
+    color:var(--ink-900);font:inherit;transition:filter .2s,transform .15s;}
+  .pl-open:hover{filter:brightness(1.1);transform:translateY(-2px);}
+  .pl-open .pl-txt b{display:block;font-family:var(--font-kr-display);font-weight:700;font-size:1rem;}
+  .pl-open .pl-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.84rem;color:var(--ink-500);margin-top:.15rem;}
   #plFrame{display:block;width:100%;height:380px;border:0;}
   #plFrame[hidden]{display:none;}
   .pl-fallback{
@@ -508,7 +525,9 @@
   @keyframes flicker{from{transform:scale(1) translateY(0);opacity:.92;}to{transform:scale(1.12,1.2) translateY(-1px);opacity:1;}}
 
   .ls-envelope{position:absolute;left:50%;bottom:14%;width:56%;transform:translateX(-50%);z-index:2;}
-  .ls-envelope > svg{position:relative;z-index:2;pointer-events:none;}
+  .ls-envelope > svg{pointer-events:none;}
+  .env-back{position:relative;z-index:1;}
+  .env-front{position:absolute;inset:0;z-index:3;}
   .ls-envelope svg{width:100%;height:auto;display:block;overflow:visible;}
   .env-flap{transform-box:fill-box;transform-origin:50% 0%;transition:transform .85s cubic-bezier(.4,.05,.25,1.05);}
   .letter-scene[data-step="pull"] .env-flap,
@@ -524,14 +543,15 @@
   #bowGroup{transform-origin:50% 42%;}
 
   .ls-letter{
-    position:absolute;left:50%;bottom:60%;width:66%;
+    position:absolute;left:50%;bottom:6%;width:66%;
     transform:translateX(-50%) translateY(0);
-    perspective:900px;cursor:grab;z-index:1;
+    perspective:900px;cursor:grab;z-index:2;
   }
   .letter-scene[data-step="unfold"] .ls-letter,
-  .letter-scene[data-step="open"] .ls-letter{z-index:3;}
+  .letter-scene[data-step="open"] .ls-letter{z-index:4;}
   .ls-letter:active{cursor:grabbing;}
-  .letter-scene[data-step="ribbon"] .ls-letter{pointer-events:none;}
+  .letter-scene[data-step="ribbon"] .ls-letter{pointer-events:none;opacity:0;}
+  .ls-letter{transition:opacity .5s ease .4s;}
   .ls-sheet{position:relative;transform-style:preserve-3d;transition:transform .5s ease;}
   .fold{
     background:linear-gradient(160deg,#fdf6e6,#f6ead2);
@@ -591,6 +611,58 @@
     .ls-candle .flame{animation:none;}
     .ls-hint::after{animation:none;}
   }
+
+  /* ================= reproductor flotante ================= */
+  #miniPlayer{
+    position:fixed;left:1rem;bottom:1rem;z-index:70;width:min(340px,86vw);
+    border-radius:18px;overflow:hidden;border:1px solid var(--card-border);
+    background:var(--glass);backdrop-filter:blur(10px);box-shadow:var(--card-shadow);
+  }
+  #miniPlayer .mp-bar{
+    display:flex;align-items:center;gap:.6rem;width:100%;cursor:pointer;
+    padding:.65rem .9rem;background:none;border:none;color:var(--ink-900);font:inherit;text-align:left;
+  }
+  #miniPlayer .mp-note{
+    flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
+    background:var(--acc-mint);color:#20303a;font-size:.95rem;
+  }
+  #miniPlayer.playing .mp-note{animation:mpPulse 1.6s ease-in-out infinite;}
+  @keyframes mpPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
+  #miniPlayer .mp-txt{flex:1 1 auto;min-width:0;}
+  #miniPlayer .mp-txt b{display:block;font-family:var(--font-kr-body);font-size:.82rem;line-height:1.2;}
+  #miniPlayer .mp-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.7rem;color:var(--ink-500);}
+  #miniPlayer .mp-chev{flex:none;color:var(--ink-500);transition:transform .3s ease;font-size:.8rem;}
+  #miniPlayer.open .mp-chev{transform:rotate(180deg);}
+  .mp-body{height:0;overflow:hidden;transition:height .4s cubic-bezier(.3,.9,.3,1);}
+  #miniPlayer.open .mp-body{height:172px;}
+  .mp-body iframe{display:block;width:100%;height:172px;border:0;}
+  .mp-fallback{display:none;padding:.9rem;font-family:var(--font-kr-body);font-size:.8rem;color:var(--ink-700);}
+  .mp-fallback a{color:var(--acc-mint);}
+  #miniPlayer.blocked .mp-body{height:auto;}
+  #miniPlayer.blocked .mp-body iframe{display:none;}
+  #miniPlayer.blocked .mp-fallback{display:block;}
+  @media (max-width:34rem){ #miniPlayer{left:.6rem;right:.6rem;width:auto;bottom:.6rem;} #editChar{bottom:5.2rem;} }
+
+  /* ================= dos personajes en el creador ================= */
+  .cr-tabs{display:flex;gap:.5rem;justify-content:center;margin-bottom:.7rem;}
+  .cr-tab{
+    font:inherit;cursor:pointer;padding:.5em 1.4em;border-radius:999px;
+    border:1px solid var(--card-border);background:var(--card-bg);color:var(--ink-700);
+    transition:background .2s,color .2s,border-color .2s;text-align:center;
+  }
+  .cr-tab b{display:block;font-family:var(--font-kr-display);font-weight:700;font-size:.98rem;}
+  .cr-tab i{display:block;font-family:var(--font-body);font-style:italic;font-size:.7rem;opacity:.8;}
+  .cr-tab.is-on{background:var(--lavender-500);border-color:var(--lavender-500);color:#241f3d;}
+  .cr-prompt{
+    text-align:center;margin:0 0 .9rem;min-height:2.6em;
+    font-family:var(--font-kr-display);font-weight:700;font-size:1rem;color:var(--ink-900);
+  }
+  .cr-prompt i{display:block;font-family:var(--font-body);font-style:italic;font-weight:400;
+    font-size:.82rem;color:var(--ink-500);margin-top:.1rem;}
+  .cr-stage{gap:.4rem;}
+  .cr-slot{flex:0 1 auto;max-width:46%;transition:opacity .3s ease, transform .3s ease;}
+  .cr-slot .chr-svg{width:min(40vw,170px);}
+  .cr-slot.dim{opacity:.55;transform:scale(.9);}
 </style>
 
 <canvas id="sparkles" aria-hidden="true"></canvas>
@@ -603,11 +675,23 @@
   <div class="cr-wrap">
     <div class="cr-head">
       <h2 class="kr" lang="ko">너의 캐릭터를 만들어봐</h2>
-      <p class="kr" lang="ko">마음에 드는 대로 골라줘. 이 페이지 전체에 나올 거야.</p>
-      <p class="cap-es" lang="es">Arma tu personaje — va a aparecer en toda la página.</p>
+      <p class="kr" lang="ko">둘 다 만들어봐 — 너랑 나. 이 페이지 전체에 같이 나올 거야.</p>
+      <p class="cap-es" lang="es">Haz los dos, tú y yo. Van a aparecer juntos en toda la página.</p>
     </div>
 
-    <div class="cr-stage" id="crStage"></div>
+    <div class="cr-tabs" role="tablist">
+      <button type="button" class="cr-tab is-on" data-who="her" role="tab" aria-selected="true">
+        <b class="kr" lang="ko">너</b><i lang="es">tú</i>
+      </button>
+      <button type="button" class="cr-tab" data-who="him" role="tab" aria-selected="false">
+        <b class="kr" lang="ko">나</b><i lang="es">yo</i>
+      </button>
+    </div>
+    <p class="cr-prompt" id="crPrompt"></p>
+    <div class="cr-stage" id="crStage">
+      <div class="cr-slot" data-who="her"></div>
+      <div class="cr-slot" data-who="him"></div>
+    </div>
 
     <div class="cr-group">
       <label lang="ko">귀 <span lang="es">· orejas</span></label>
@@ -739,6 +823,26 @@
       <span>💗 <b lang="ko">시작한 날 · el día que empezó</b></span>
       <span>🌙 <b lang="ko">첫 한 달 · nuestro primer mes</b></span>
     </div>
+  </div>
+</div>
+
+<div id="miniPlayer">
+  <button type="button" class="mp-bar" id="mpBar" aria-expanded="false">
+    <span class="mp-note" aria-hidden="true">♪</span>
+    <span class="mp-txt">
+      <b class="kr" lang="ko">우리 노래</b>
+      <i lang="es">nuestra playlist</i>
+    </span>
+    <span class="mp-chev" aria-hidden="true">▾</span>
+  </button>
+  <div class="mp-body">
+    <iframe id="plFrame" title="Spotify"
+      src="https://open.spotify.com/embed/playlist/5dmeP203AImnqheTNiXHjx?utm_source=generator&amp;theme=0"
+      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    <p class="mp-fallback">
+      <span class="kr" lang="ko">여기선 플레이어가 안 열려.</span>
+      <a href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx" target="_blank" rel="noopener">Abrir en Spotify →</a>
+    </p>
   </div>
 </div>
 
@@ -887,12 +991,9 @@
       </svg>
 
       <div class="ls-envelope" id="envelope">
-        <svg viewBox="0 0 260 168" aria-hidden="true">
+        <svg class="env-back" viewBox="0 0 260 168" aria-hidden="true">
           <rect x="4" y="30" width="252" height="134" rx="9" fill="#f3e2cb" stroke="#d3b394" stroke-width="2.4"/>
-          <path d="M4 96 L130 150 L256 96 L256 164 L4 164 Z" fill="#f7ead8" stroke="#d3b394" stroke-width="2.4" stroke-linejoin="round"/>
           <path class="env-flap" d="M4 30 L130 112 L256 30 Z" fill="#f9efe0" stroke="#d3b394" stroke-width="2.4" stroke-linejoin="round"/>
-          <circle cx="130" cy="104" r="13" fill="#e08fa8" stroke="#c4708c" stroke-width="2"/>
-          <path d="M130 99 c-1.6 -3 -6 -2.6 -6 .9 0 2.6 3.4 4.6 6 6.9 2.6 -2.3 6 -4.3 6 -6.9 0 -3.5 -4.4 -3.9 -6 -.9 z" fill="#fbe4ec"/>
         </svg>
         <div class="ls-letter" id="lsLetter">
           <div class="ls-sheet" id="lsSheet">
@@ -902,6 +1003,11 @@
           </div>
         </div>
 
+        <svg class="env-front" viewBox="0 0 260 168" aria-hidden="true">
+          <path d="M4 96 L130 150 L256 96 L256 164 L4 164 Z" fill="#f7ead8" stroke="#d3b394" stroke-width="2.4" stroke-linejoin="round"/>
+          <circle cx="130" cy="148" r="13" fill="#e08fa8" stroke="#c4708c" stroke-width="2"/>
+          <path d="M130 143 c-1.6 -3 -6 -2.6 -6 .9 0 2.6 3.4 4.6 6 6.9 2.6 -2.3 6 -4.3 6 -6.9 0 -3.5 -4.4 -3.9 -6 -.9 z" fill="#fbe4ec"/>
+        </svg>
         <div class="ls-ribbon" id="ribbon">
           <svg viewBox="0 0 260 168" aria-hidden="true">
             <rect x="118" y="24" width="24" height="146" fill="#eba8c2" opacity=".95"/>
@@ -983,19 +1089,13 @@
       <span class="kr" lang="ko">네가 골라준 노래들. 여기서 같이 듣자.</span>
       <span class="cap-es" lang="es">Las canciones que tú elegiste. Para escucharlas aquí, juntos.</span>
     </p>
-    <div class="pl-wrap">
-      <iframe id="plFrame" title="Spotify" loading="lazy"
-        src="https://open.spotify.com/embed/playlist/5dmeP203AImnqheTNiXHjx?utm_source=generator&amp;theme=0"
-        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-      <a class="pl-fallback" id="plFallback" hidden target="_blank" rel="noopener"
-         href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx">
-        <span class="pl-note" aria-hidden="true">♪</span>
-        <span class="pl-txt">
-          <b class="kr" lang="ko">우리 플레이리스트 열기</b>
-          <i lang="es">Abrir nuestra playlist en Spotify</i>
-        </span>
-      </a>
-    </div>
+    <button type="button" class="pl-open" id="plOpen">
+      <span class="pl-note" aria-hidden="true">♪</span>
+      <span class="pl-txt">
+        <b class="kr" lang="ko">여기 눌러서 우리 노래 틀기</b>
+        <i lang="es">Pon nuestra playlist y déjala sonando mientras lees</i>
+      </span>
+    </button>
   </section>
 
   <!-- ============================ REUNION ============================ -->
@@ -1109,6 +1209,7 @@
                      whiskers:'none', tail:'none', accessory:'none', height:'normal'};
 
   var STORE_KEY = 'nuestra-luna:character';
+  var STORE_KEY_HIM = 'nuestra-luna:character-him';
   var HER = Object.assign({}, HER_DEFAULT);
   var hasSaved = false;
   try {
@@ -1121,6 +1222,17 @@
       hasSaved = true;
     }
   } catch(e){ /* modo privado o almacenamiento bloqueado: usamos el de por defecto */ }
+
+  var HIM_DEFAULT = HIM_CFG;
+  var HIM = Object.assign({}, HIM_DEFAULT);
+  try {
+    var rawHim = localStorage.getItem(STORE_KEY_HIM);
+    if(rawHim) HIM = Object.assign({}, HIM_DEFAULT, JSON.parse(rawHim));
+  } catch(e){ /* sin guardado: se queda el de por defecto */ }
+
+  /* a quién se le está editando ahora mismo */
+  var EDITING = 'her';
+  function current(){ return EDITING === 'her' ? HER : HIM; }
 
   var EARS = {
     long: function(f,l,i,w){ return (
@@ -1299,7 +1411,7 @@
   function buildChar(cfgOrKind, prefix){
     var cfg = cfgOrKind;
     if(cfgOrKind === 'usagi') cfg = HER;
-    else if(cfgOrKind === 'blue') cfg = HIM_CFG;
+    else if(cfgOrKind === 'blue') cfg = HIM;
     cfg = Object.assign({}, HER_DEFAULT, cfg || {});
 
     var fur = cfg.fur, inner = cfg.inner, line = darken(fur), lw = 6.5;
@@ -1644,9 +1756,16 @@
       ribbon.style.transition = 'transform .7s ease, opacity .6s ease';
       ribbon.style.transform = 'translate(70px,90px) rotate(16deg)';
       go('pull');
+      /* la solapa se abre y la carta asoma la cabeza para que se vea qué jalar */
+      setTimeout(function(){
+        lsLet.style.transition = 'transform .7s cubic-bezier(.3,.9,.3,1)';
+        lsLet.style.transform = 'translateX(-50%) translateY(-' + PEEK + 'px)';
+        setTimeout(function(){ lsLet.style.transition = ''; }, 760);
+      }, 620);
     }
 
     /* ---- 2. sacar la carta ---- */
+    var PEEK = 40;                    /* cuánto se asoma sola al abrir la solapa */
     var lDrag = null, lOut = 0, justDragged = false;
     function markDrag(){ justDragged = true; setTimeout(function(){ justDragged = false; }, 420); }
     lsLet.addEventListener('pointerdown', function(e){
@@ -1658,7 +1777,7 @@
       if(lDrag === null) return;
       var dy = lDrag - e.clientY;
       lOut = Math.max(0, Math.min(dy / 150, 1));
-      lsLet.style.transform = 'translateX(-50%) translateY(' + (-lOut*110) + 'px) scale(' + (1 + lOut*.08) + ')';
+      lsLet.style.transform = 'translateX(-50%) translateY(' + (-PEEK - lOut*105) + 'px) scale(' + (1 + lOut*.08) + ')';
       if(lOut >= 1) pullOut();
     });
     function endPull(){
@@ -1666,7 +1785,7 @@
       lDrag = null;
       if(step() === 'pull' && lOut < 1){
         lsLet.style.transition = 'transform .4s ease';
-        lsLet.style.transform = 'translateX(-50%)';
+        lsLet.style.transform = 'translateX(-50%) translateY(-' + PEEK + 'px)';
         setTimeout(function(){ lsLet.style.transition = ''; }, 420);
       }
     }
@@ -1677,7 +1796,7 @@
       lDrag = null;
       markDrag();
       lsLet.style.transition = 'transform .6s cubic-bezier(.3,.9,.3,1)';
-      lsLet.style.transform = 'translateX(-50%) translateY(-118px) scale(1.08)';
+      lsLet.style.transform = 'translateX(-50%) translateY(-' + (PEEK + 108) + 'px) scale(1.08)';
       go('unfold');
     }
 
@@ -1993,13 +2112,26 @@
   var PHOTO_DIR = 'img/';
   var PHOTO_EXT = ['jpg','jpeg','png','webp'];
   function loadPhoto(art){
-    var img = art.querySelector('.pc-photo');
+    var img  = art.querySelector('.pc-photo');
+    var blur = art.querySelector('.pc-blur');
     var key = art.dataset.key, i = 0;
     function tryNext(){
       if(i >= PHOTO_EXT.length) return;          /* nos quedamos con el dibujo */
       img.src = PHOTO_DIR + key + '.' + PHOTO_EXT[i++];
     }
-    img.addEventListener('load', function(){ art.classList.add('has-photo'); });
+    img.addEventListener('load', function(){
+      art.classList.add('has-photo');
+      blur.src = img.currentSrc || img.src;
+      /* comparamos la forma de la foto con la del marco */
+      var box = art.getBoundingClientRect();
+      var frame = (box.width && box.height) ? box.width / box.height : 4/3;
+      var ratio = img.naturalWidth / img.naturalHeight;
+      if(ratio && Math.abs(Math.log(ratio / frame)) > 0.26){
+        art.classList.add('fit-contain');
+      } else {
+        art.classList.remove('fit-contain');
+      }
+    });
     img.addEventListener('error', tryNext);
     tryNext();
   }
@@ -2015,6 +2147,7 @@
         '<span class="pc-face pc-front">' +
           '<span class="pc-art" data-key="' + c.k + '">' +
             '<svg viewBox="0 0 160 108" preserveAspectRatio="xMidYMid slice" aria-hidden="true">' + SC[c.k] + '</svg>' +
+            '<img class="pc-blur" alt="" aria-hidden="true" decoding="async">' +
             '<img class="pc-photo" alt="" decoding="async">' +
           '</span>' +
           '<span class="pc-stamp"></span>' +
@@ -2096,62 +2229,92 @@
     });
   }
 
+  var PROMPTS = {
+    her: ['마음에 드는 대로 골라줘. 이게 너야.', 'Este eres tú — hazlo como más te guste.'],
+    him: ['너의 예쁜 세상에서 나는 어떤 모습일까?', '¿Cómo me imaginas en tu bello mundo?']
+  };
+
   function syncControls(){
+    var cfg = current();
     document.querySelectorAll('.cr-opts[data-key], .cr-swatches[data-key]').forEach(function(row){
       var key = row.dataset.key;
       row.querySelectorAll('button[data-v]').forEach(function(b){
-        b.setAttribute('aria-pressed', HER[key] === b.dataset.v ? 'true' : 'false');
+        b.setAttribute('aria-pressed', cfg[key] === b.dataset.v ? 'true' : 'false');
       });
     });
+    document.querySelectorAll('.cr-tab').forEach(function(t){
+      var on = t.dataset.who === EDITING;
+      t.classList.toggle('is-on', on);
+      t.setAttribute('aria-selected', on ? 'true' : 'false');
+    });
+    var pr = PROMPTS[EDITING];
+    document.getElementById('crPrompt').innerHTML =
+      '<span lang="ko">' + pr[0] + '</span><i lang="es">' + pr[1] + '</i>';
   }
 
   function previewChar(){
-    crStage.innerHTML = buildChar(HER, 'crPreview');
-    var pv = document.getElementById('crPreview');
-    if(pv && !characters.some(function(c){ return c.chr === pv; })){
-      registerCharacter('crPreview', {max:4.5, anchorY:0.6});
-    }
+    [['her', HER], ['him', HIM]].forEach(function(pair){
+      var who = pair[0], cfg = pair[1];
+      var slot = crStage.querySelector('.cr-slot[data-who="' + who + '"]');
+      var id = 'crPv_' + who;
+      slot.innerHTML = buildChar(cfg, id);
+      slot.classList.toggle('dim', who !== EDITING);
+      var el = document.getElementById(id);
+      if(el) registerCharacter(id, {max:4, anchorY:0.6});
+    });
   }
 
   function refreshCreator(){ previewChar(); syncControls(); }
+
+  document.querySelectorAll('.cr-tab').forEach(function(tab){
+    tab.addEventListener('click', function(){
+      EDITING = tab.dataset.who;
+      crSaved.textContent = '';
+      refreshCreator();
+    });
+  });
 
   document.addEventListener('click', function(e){
     var b = e.target.closest('#creator button[data-v]');
     if(!b) return;
     var row = b.closest('[data-key]');
     if(!row) return;
-    HER[row.dataset.key] = b.dataset.v;
+    current()[row.dataset.key] = b.dataset.v;
     crSaved.textContent = '';
     refreshCreator();
   });
 
   document.getElementById('crRandom').addEventListener('click', function(){
     function pick(o){ var k = Object.keys(o); return k[Math.floor(Math.random()*k.length)]; }
-    HER.ears   = pick(EARS);
-    HER.eyes   = pick(EYES);
-    HER.brows  = pick(BROWS);
-    HER.mouth  = pick(MOUTHS);
-    HER.cheeks    = ['striped','plain','hearts','none'][Math.floor(Math.random()*4)];
-    HER.fur       = FURS[Math.floor(Math.random()*FURS.length)];
-    HER.inner     = INNERS[Math.floor(Math.random()*INNERS.length)];
-    HER.whiskers  = pick(WHISKERS);
-    HER.tail      = pick(TAILS);
-    HER.accessory = pick(ACCESSORIES);
-    HER.height    = pick(HEIGHTS);
+    var c = current();
+    c.ears   = pick(EARS);
+    c.eyes   = pick(EYES);
+    c.brows  = pick(BROWS);
+    c.mouth  = pick(MOUTHS);
+    c.cheeks    = ['striped','plain','hearts','none'][Math.floor(Math.random()*4)];
+    c.fur       = FURS[Math.floor(Math.random()*FURS.length)];
+    c.inner     = INNERS[Math.floor(Math.random()*INNERS.length)];
+    c.whiskers  = pick(WHISKERS);
+    c.tail      = pick(TAILS);
+    c.accessory = pick(ACCESSORIES);
+    c.height    = pick(HEIGHTS);
     crSaved.textContent = '';
     refreshCreator();
   });
 
   document.getElementById('crReset').addEventListener('click', function(){
-    HER = Object.assign({}, HER_DEFAULT);
+    if(EDITING === 'her') HER = Object.assign({}, HER_DEFAULT);
+    else HIM = Object.assign({}, HIM_DEFAULT);
     crSaved.textContent = '';
     refreshCreator();
   });
 
   document.getElementById('crSave').addEventListener('click', function(){
     var ok = true;
-    try { localStorage.setItem(STORE_KEY, JSON.stringify(HER)); }
-    catch(err){ ok = false; }
+    try {
+      localStorage.setItem(STORE_KEY, JSON.stringify(HER));
+      localStorage.setItem(STORE_KEY_HIM, JSON.stringify(HIM));
+    } catch(err){ ok = false; }
     crSaved.textContent = ok
       ? '저장했어! · guardado en tu navegador'
       : '이 브라우저엔 저장이 안 되지만 계속할 수 있어 · no se pudo guardar aquí, pero puedes seguir';
@@ -2173,13 +2336,28 @@
 
   /* ================= playlist: aviso si el embed queda bloqueado ================= */
   (function(){
-    var fr = document.getElementById('plFrame'), fb = document.getElementById('plFallback');
-    if(!fr || !fb) return;
+    var mp = document.getElementById('miniPlayer');
+    var bar = document.getElementById('mpBar');
+    var fr = document.getElementById('plFrame');
+    if(!mp || !bar) return;
+
+    function setOpen(on){
+      mp.classList.toggle('open', on);
+      bar.setAttribute('aria-expanded', on ? 'true' : 'false');
+      if(on) mp.classList.add('playing');
+    }
+    bar.addEventListener('click', function(){ setOpen(!mp.classList.contains('open')); });
+
+    var openBtn = document.getElementById('plOpen');
+    if(openBtn) openBtn.addEventListener('click', function(){
+      setOpen(true);
+      mp.scrollIntoView({block:'nearest'});
+    });
+
+    /* si el visor bloquea el iframe, ofrecemos el enlace */
     var loaded = false;
     fr.addEventListener('load', function(){ loaded = true; });
-    setTimeout(function(){
-      if(!loaded){ fr.hidden = true; fb.hidden = false; }
-    }, 3500);
+    setTimeout(function(){ if(!loaded) mp.classList.add('blocked'); }, 3500);
   })();
 
   (function decorateCreator(){
