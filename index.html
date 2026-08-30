@@ -224,27 +224,36 @@
   .es-block .ps{font-family:var(--font-body);font-style:italic;font-size:.88rem;}
 
   /* ================= postales ================= */
-  .pc-carousel{--cw:clamp(226px,46vw,320px);position:relative;margin-top:2.2rem;}
-  .postcard-grid{position:relative;height:clamp(310px,58vw,412px);perspective:1500px;
-    transform-style:preserve-3d;touch-action:pan-y;}
+  .pc-carousel{--cw:clamp(230px,62vw,320px);--gh:calc(var(--cw) * 0.8375 + 30px);
+    position:relative;margin-top:2.2rem;}
+  /* el recorte evita que las postales de los extremos empujen la página a lo ancho */
+  .postcard-grid{position:relative;height:var(--gh);perspective:1500px;
+    overflow:hidden;touch-action:pan-y;
+    /* las de los extremos se desvanecen en vez de cortarse en seco */
+    -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);
+    mask-image:linear-gradient(90deg,transparent 0,#000 9%,#000 91%,transparent 100%);}
   .postcard{
-    position:absolute;top:0;left:50%;width:var(--cw);margin-left:calc(var(--cw) / -2);
+    position:absolute;top:50%;left:50%;width:var(--cw);margin-left:calc(var(--cw) / -2);
     background:none;border:none;padding:0;font:inherit;color:inherit;cursor:pointer;
     aspect-ratio:4/3.35;perspective:1000px;
     transition:transform .58s cubic-bezier(.32,.9,.3,1), opacity .45s ease, filter .45s ease;
     will-change:transform,opacity;
   }
   .postcard.far{opacity:0;pointer-events:none;}
-  .postcard.side{filter:saturate(.78) brightness(.82);}
+  .postcard.side{filter:saturate(.9) brightness(.9);}
   .pc-nav{
-    position:absolute;top:44%;z-index:20;width:44px;height:44px;border-radius:50%;cursor:pointer;
+    position:absolute;top:calc(var(--gh) / 2);transform:translateY(-50%);
+    z-index:20;width:44px;height:44px;border-radius:50%;cursor:pointer;
     display:grid;place-items:center;font-size:1.4rem;line-height:1;
     border:1px solid var(--card-border);background:var(--glass);color:var(--ink-900);
     backdrop-filter:blur(8px);box-shadow:var(--card-shadow);transition:transform .15s,filter .2s;
   }
-  .pc-nav:hover{transform:scale(1.08);filter:brightness(1.15);}
+  .pc-nav:hover{transform:translateY(-50%) scale(1.08);filter:brightness(1.15);}
   .pc-nav.prev{left:0;}
   .pc-nav.next{right:0;}
+  @media (max-width:560px){
+    .pc-nav{width:38px;height:38px;font-size:1.2rem;}
+  }
   .pc-dots{display:flex;gap:.42rem;justify-content:center;flex-wrap:wrap;margin-top:1.3rem;}
   .pc-dots button{
     width:8px;height:8px;padding:0;border-radius:50%;cursor:pointer;border:none;
@@ -321,7 +330,6 @@
   .pl-open:hover{filter:brightness(1.1);transform:translateY(-2px);}
   .pl-open .pl-txt b{display:block;font-family:var(--font-kr-display);font-weight:700;font-size:1rem;}
   .pl-open .pl-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.84rem;color:var(--ink-500);margin-top:.15rem;}
-  #plFrame{display:block;width:100%;height:380px;border:0;}
   #plFrame[hidden]{display:none;}
   .pl-fallback{
     display:flex;align-items:center;gap:1rem;padding:1.6rem 1.5rem;text-decoration:none;color:var(--ink-900);
@@ -658,8 +666,13 @@
   #miniPlayer .mp-chev{flex:none;color:var(--ink-500);transition:transform .3s ease;font-size:.8rem;}
   #miniPlayer.open .mp-chev{transform:rotate(180deg);}
   .mp-body{height:0;overflow:hidden;transition:height .4s cubic-bezier(.3,.9,.3,1);}
-  #miniPlayer.open .mp-body{height:172px;}
+  #miniPlayer.open .mp-body{height:204px;}
   .mp-body iframe{display:block;width:100%;height:172px;border:0;}
+  .mp-link{
+    display:block;padding:.45rem .9rem .6rem;text-align:center;text-decoration:none;
+    font-family:var(--font-kr-body);font-size:.72rem;color:var(--acc-mint);
+  }
+  #miniPlayer.blocked .mp-link{display:none;}
   .mp-fallback{display:none;padding:.9rem;font-family:var(--font-kr-body);font-size:.8rem;color:var(--ink-700);}
   .mp-fallback a{color:var(--acc-mint);}
   #miniPlayer.blocked .mp-body{height:auto;}
@@ -889,6 +902,8 @@
     <iframe id="plFrame" title="Spotify"
       src="https://open.spotify.com/embed/playlist/5dmeP203AImnqheTNiXHjx?utm_source=generator&amp;theme=0"
       allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
+    <a class="mp-link" href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx"
+       target="_blank" rel="noopener"><span lang="ko">스포티파이에서 열기</span> · abrir en Spotify ↗</a>
     <p class="mp-fallback">
       <span class="kr" lang="ko">여기선 플레이어가 안 열려.</span>
       <a href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx" target="_blank" rel="noopener">Abrir en Spotify →</a>
@@ -2257,7 +2272,8 @@
       card.classList.toggle('far', a > 2);
       card.classList.toggle('side', a > 0 && a <= 2);
       if(a > 2){
-        card.style.transform = 'translateX(' + (off > 0 ? 150 : -150) + '%) scale(.6)';
+        card.style.transform = 'translate(' + (off > 0 ? 150 : -150) + '%,-50%) scale(.6)';
+        card.style.opacity = 0;          /* si no, el estilo en línea gana y salen brillando */
         card.style.zIndex = 0;
         return;
       }
@@ -2265,8 +2281,8 @@
       var scale = 1 - a * 0.14;
       var rot = off * -24;
       card.style.transform =
-        'translateX(' + x + '%) translateZ(' + (-a * 110) + 'px) rotateY(' + rot + 'deg) scale(' + scale + ')';
-      card.style.opacity = a === 0 ? 1 : (a === 1 ? .92 : .6);
+        'translate(' + x + '%,-50%) translateZ(' + (-a * 110) + 'px) rotateY(' + rot + 'deg) scale(' + scale + ')';
+      card.style.opacity = a === 0 ? 1 : (a === 1 ? .95 : .72);
       card.style.zIndex = 10 - a;
       card.setAttribute('aria-hidden', a === 0 ? 'false' : 'true');
       if(a !== 0) card.classList.remove('flipped');
