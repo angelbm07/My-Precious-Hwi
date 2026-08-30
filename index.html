@@ -96,6 +96,9 @@
   button:focus-visible, input:focus-visible, [tabindex]:focus-visible{outline:2.5px solid var(--lavender-500);outline-offset:3px;}
 
   .kr{font-family:var(--font-kr-body);}
+  /* el coreano no debe partirse a mitad de palabra */
+  [lang="ko"], .kr{word-break:keep-all;overflow-wrap:anywhere;}
+
   .cap-es{display:block;font-family:var(--font-body);font-style:italic;font-weight:300;color:var(--ink-500);font-size:.86em;margin-top:.35em;}
 
   #sparkles{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;}
@@ -114,7 +117,7 @@
   #clocks{--sec:var(--acc-sky);}
   #letter{--sec:var(--acc-rose);}
   #postcards{--sec:var(--acc-peach);}
-  #playlist{--sec:var(--acc-mint);}
+  #wishes{--sec:var(--acc-mint);}
   #reunion{--sec:var(--acc-butter);}
   section h2.kr-h2{position:relative;}
   section h2.kr-h2::after{content:"";display:block;width:2.6rem;height:3px;border-radius:99px;
@@ -193,7 +196,13 @@
   .badge-wrap{margin-top:2rem;display:flex;flex-direction:column;align-items:center;}
   .badge{display:inline-flex;align-items:baseline;gap:.45em;padding:.6em 1.3em;border-radius:999px;border:1px solid var(--card-border);background:var(--card-bg-strong);backdrop-filter:blur(8px);font-family:var(--font-kr-body);font-size:.95rem;color:var(--lavender-500);box-shadow:var(--card-shadow);}
   .badge strong{font-family:var(--font-kr-display);font-size:1.2rem;color:var(--ink-900);font-weight:700;}
-  .badge-cap{margin-top:.6rem;font-family:var(--font-body);font-style:italic;font-size:.82rem;color:var(--ink-500);}
+  .badge-cap{margin-top:.9rem;font-family:var(--font-body);font-style:italic;font-size:.82rem;color:var(--ink-500);}
+  .chips{display:flex;flex-wrap:wrap;gap:.5rem;justify-content:center;margin-top:.9rem;}
+  .chip{display:inline-flex;align-items:baseline;gap:.45em;padding:.38em .95em;border-radius:999px;
+    border:1px solid var(--card-border);background:var(--card-bg);backdrop-filter:blur(8px);
+    font-family:var(--font-kr-body);font-size:.76rem;color:var(--ink-500);}
+  .chip b{font-family:var(--font-display);font-weight:600;font-size:.9rem;color:var(--acc-butter);letter-spacing:.02em;}
+  .chip[hidden]{display:none;}
 
   .scroll-cue{margin-top:2.6rem;color:var(--ink-500);font-family:var(--font-kr-body);font-size:.85rem;display:flex;flex-direction:column;align-items:center;gap:.5rem;}
   .scroll-cue svg{width:14px;height:20px;opacity:.8;animation:bob 2.4s ease-in-out infinite;}
@@ -322,27 +331,6 @@
     .pop{display:none;}
   }
 
-  /* ================= playlist ================= */
-  .pl-open{display:flex;align-items:center;gap:1rem;width:100%;cursor:pointer;text-align:left;
-    padding:1.4rem 1.5rem;border-radius:20px;border:1px solid var(--card-border);
-    background:var(--card-bg);backdrop-filter:blur(8px);box-shadow:var(--card-shadow);
-    color:var(--ink-900);font:inherit;transition:filter .2s,transform .15s;}
-  .pl-open:hover{filter:brightness(1.1);transform:translateY(-2px);}
-  .pl-open .pl-txt b{display:block;font-family:var(--font-kr-display);font-weight:700;font-size:1rem;}
-  .pl-open .pl-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.84rem;color:var(--ink-500);margin-top:.15rem;}
-  #plFrame[hidden]{display:none;}
-  .pl-fallback{
-    display:flex;align-items:center;gap:1rem;padding:1.6rem 1.5rem;text-decoration:none;color:var(--ink-900);
-  }
-  .pl-fallback[hidden]{display:none;}
-  .pl-fallback:hover{background:rgba(255,255,255,.05);}
-  .pl-note{
-    flex:none;width:52px;height:52px;border-radius:50%;display:grid;place-items:center;
-    background:var(--lavender-500);color:#241f3d;font-size:1.5rem;
-  }
-  .pl-txt b{display:block;font-family:var(--font-kr-display);font-weight:700;font-size:1.02rem;}
-  .pl-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.85rem;color:var(--ink-500);margin-top:.15rem;}
-
   /* ================= creador de personaje ================= */
   #creator{
     position:fixed;inset:0;z-index:200;overflow-y:auto;
@@ -427,8 +415,10 @@
   .final-stage{position:relative;width:min(72vw,330px);margin:0 auto 1.2rem;}
   .final-moon{width:100%;height:auto;display:block;filter:drop-shadow(0 0 44px rgba(255,222,160,.5));}
   .final-pair{position:absolute;left:50%;bottom:-4%;width:74%;transform:translateX(-50%);}
-  #closing p.final-line{font-family:var(--font-kr-display);font-weight:700;font-size:clamp(1.25rem,3.4vw,1.6rem);color:var(--lavender-500);max-width:22ch;margin:0 auto;}
-  #closing .cap-es{font-family:var(--font-display);font-style:italic;max-width:26ch;margin-left:auto;margin-right:auto;}
+  #closing p.final-line{font-family:var(--font-kr-display);font-weight:700;font-size:clamp(1.25rem,3.4vw,1.6rem);color:var(--lavender-500);
+    max-width:min(92vw,32rem);margin:0 auto;text-wrap:balance;}
+  #closing .cap-es{font-family:var(--font-display);font-style:italic;
+    max-width:min(92vw,30rem);margin-left:auto;margin-right:auto;text-wrap:balance;}
   footer{text-align:center;padding:3rem 1.5rem 4rem;color:var(--ink-500);font-size:.84rem;position:relative;z-index:2;}
   footer .kr{font-family:var(--font-kr-body);display:block;}
   footer .cap-es{margin-top:.3rem;}
@@ -489,6 +479,13 @@
   .cal-count{display:inline-block;margin-top:.8rem;padding:.45em 1.1em;border-radius:999px;
     background:var(--card-bg-strong);border:1px solid var(--card-border);
     font-family:var(--font-kr-display);font-weight:700;color:var(--lavender-300);font-size:1rem;}
+  .cal-hitos{list-style:none;margin:1.1rem 0 0;padding:0;display:flex;flex-wrap:wrap;gap:.45rem;justify-content:center;}
+  .cal-hitos li{display:flex;align-items:baseline;gap:.5em;padding:.42em .9em;border-radius:12px;
+    border:1px solid var(--card-border);background:var(--card-bg);font-family:var(--font-kr-body);font-size:.76rem;color:var(--ink-500);}
+  .cal-hitos b{font-family:var(--font-display);font-weight:600;font-size:.88rem;color:var(--acc-butter);}
+  .cal-hitos li.hoy{border-color:var(--blush-500);background:rgba(244,170,208,.16);}
+  .cal-hitos li.hoy b{color:var(--blush-500);}
+  .cal-hitos i{font-style:normal;opacity:.75;font-size:.72rem;}
   .cal-close{position:absolute;top:-.3rem;right:0;background:none;border:none;color:var(--ink-500);
     font-size:1.4rem;cursor:pointer;line-height:1;padding:.2em .35em;}
   .cal-close:hover{color:var(--ink-900);}
@@ -541,6 +538,77 @@
   }
   @keyframes lanternSway{from{margin-left:-16px;}to{margin-left:16px;}}
   @media (prefers-reduced-motion: reduce){ #lanterns{display:none;} }
+
+  /* ================= linternas de deseos ================= */
+  .wish-sky{
+    position:relative;height:clamp(280px,44vw,360px);overflow:hidden;border-radius:24px;
+    border:1px solid var(--card-border);box-shadow:var(--card-shadow);
+    background:linear-gradient(180deg, rgba(41,36,71,.55), rgba(61,50,104,.42) 55%, rgba(74,60,109,.30));
+  }
+  .wish-sky::after{           /* un velo abajo, para que nazcan de la penumbra */
+    content:"";position:absolute;inset:auto 0 0 0;height:38%;pointer-events:none;
+    background:linear-gradient(180deg, transparent, rgba(31,26,60,.55));
+  }
+  .wish-empty{
+    position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.35rem;text-align:center;padding:1.4rem;color:var(--ink-500);
+  }
+  .wish-empty[hidden]{display:none;}
+  .wish-empty .kr{font-family:var(--font-kr-body);font-size:.95rem;color:var(--ink-700);}
+  .wish-empty i{font-family:var(--font-body);font-style:italic;font-size:.82rem;}
+  .wish{
+    position:absolute;bottom:-26%;width:clamp(104px,15vw,132px);will-change:transform,opacity;
+    animation:wishFloat linear infinite, wishSway ease-in-out infinite alternate;
+  }
+  .wish svg{width:100%;height:auto;display:block;filter:drop-shadow(0 0 14px rgba(255,196,120,.34));}
+  .wish .wish-text{
+    position:absolute;left:11%;right:11%;top:30%;text-align:center;
+    font-family:var(--font-kr-hand);font-size:.74rem;line-height:1.3;color:#5b3416;
+    word-break:keep-all;overflow-wrap:anywhere;text-shadow:0 1px 0 rgba(255,250,235,.7);
+    overflow:hidden;display:-webkit-box;-webkit-line-clamp:4;-webkit-box-orient:vertical;
+  }
+  @keyframes wishFloat{
+    0%{transform:translateY(0) scale(.86);opacity:0;}
+    8%{opacity:1;}
+    86%{opacity:1;}
+    100%{transform:translateY(-165%) scale(1.04);opacity:0;}
+  }
+  @keyframes wishSway{from{margin-left:-13px;}to{margin-left:13px;}}
+  .wish.recien{animation-delay:0s, 0s;}
+
+  .wish-form{
+    display:flex;flex-wrap:wrap;gap:.7rem;align-items:stretch;margin-top:1.2rem;
+  }
+  .wish-form textarea{
+    flex:1 1 16rem;min-height:3.2rem;resize:none;font:inherit;
+    font-family:var(--font-kr-body);font-size:.95rem;color:var(--ink-900);
+    padding:.8rem 1rem;border-radius:16px;border:1px solid var(--card-border);
+    background:var(--card-bg);backdrop-filter:blur(8px);
+  }
+  .wish-form textarea::placeholder{color:var(--ink-500);}
+  .wish-form textarea:focus{outline:none;border-color:var(--lavender-500);}
+  .wish-send{
+    flex:0 0 auto;font:inherit;cursor:pointer;padding:.8em 1.5em;border-radius:16px;border:none;
+    font-family:var(--font-kr-body);font-size:.92rem;color:#241f3d;background:var(--acc-mint);
+    transition:filter .2s,transform .15s;
+  }
+  .wish-send:hover{filter:brightness(1.08);transform:translateY(-1px);}
+  .wish-send:disabled{opacity:.45;cursor:default;transform:none;filter:none;}
+  .wish-foot{
+    display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:.4rem 1rem;
+    margin:.7rem .2rem 0;font-size:.76rem;color:var(--ink-500);
+  }
+  @media (max-width:30rem){ .wish-foot{justify-content:flex-start;} }
+  .wish-foot button{
+    font:inherit;font-size:.76rem;cursor:pointer;background:none;border:none;padding:0;
+    color:var(--ink-500);text-decoration:underline;text-underline-offset:3px;
+  }
+  .wish-foot button:hover{color:var(--ink-700);}
+  .wish-foot button[hidden]{display:none;}
+  @media (prefers-reduced-motion: reduce){
+    .wish{animation:none;position:static;width:auto;margin:.4rem;}
+    .wish-sky{height:auto;display:flex;flex-wrap:wrap;justify-content:center;padding:1rem;}
+  }
 
   /* ================= sobre, ramo y vela ================= */
   .letter-scene{
@@ -644,41 +712,6 @@
     .ls-hint::after{animation:none;}
   }
 
-  /* ================= reproductor flotante ================= */
-  #miniPlayer{
-    position:fixed;left:1rem;bottom:1rem;z-index:70;width:min(340px,86vw);
-    border-radius:18px;overflow:hidden;border:1px solid var(--card-border);
-    background:var(--glass);backdrop-filter:blur(10px);box-shadow:var(--card-shadow);
-  }
-  #miniPlayer .mp-bar{
-    display:flex;align-items:center;gap:.6rem;width:100%;cursor:pointer;
-    padding:.65rem .9rem;background:none;border:none;color:var(--ink-900);font:inherit;text-align:left;
-  }
-  #miniPlayer .mp-note{
-    flex:none;width:30px;height:30px;border-radius:50%;display:grid;place-items:center;
-    background:var(--acc-mint);color:#20303a;font-size:.95rem;
-  }
-  #miniPlayer.playing .mp-note{animation:mpPulse 1.6s ease-in-out infinite;}
-  @keyframes mpPulse{0%,100%{transform:scale(1);}50%{transform:scale(1.12);}}
-  #miniPlayer .mp-txt{flex:1 1 auto;min-width:0;}
-  #miniPlayer .mp-txt b{display:block;font-family:var(--font-kr-body);font-size:.82rem;line-height:1.2;}
-  #miniPlayer .mp-txt i{display:block;font-family:var(--font-body);font-style:italic;font-size:.7rem;color:var(--ink-500);}
-  #miniPlayer .mp-chev{flex:none;color:var(--ink-500);transition:transform .3s ease;font-size:.8rem;}
-  #miniPlayer.open .mp-chev{transform:rotate(180deg);}
-  .mp-body{height:0;overflow:hidden;transition:height .4s cubic-bezier(.3,.9,.3,1);}
-  #miniPlayer.open .mp-body{height:204px;}
-  .mp-body iframe{display:block;width:100%;height:172px;border:0;}
-  .mp-link{
-    display:block;padding:.45rem .9rem .6rem;text-align:center;text-decoration:none;
-    font-family:var(--font-kr-body);font-size:.72rem;color:var(--acc-mint);
-  }
-  #miniPlayer.blocked .mp-link{display:none;}
-  .mp-fallback{display:none;padding:.9rem;font-family:var(--font-kr-body);font-size:.8rem;color:var(--ink-700);}
-  .mp-fallback a{color:var(--acc-mint);}
-  #miniPlayer.blocked .mp-body{height:auto;}
-  #miniPlayer.blocked .mp-body iframe{display:none;}
-  #miniPlayer.blocked .mp-fallback{display:block;}
-  @media (max-width:34rem){ #miniPlayer{left:.6rem;right:.6rem;width:auto;bottom:.6rem;} #editChar{bottom:5.2rem;} }
 
   /* ================= dos personajes en el creador ================= */
   .cr-tabs{display:flex;gap:.5rem;justify-content:center;margin-bottom:.7rem;}
@@ -880,34 +913,13 @@
       <h3 class="kr" lang="ko">우리가 함께한 날들</h3>
       <p lang="es">Todos los días que llevamos juntos</p>
       <span class="cal-count" id="calCount"></span>
+      <ul class="cal-hitos" id="calHitos"></ul>
     </div>
     <div class="cal-months" id="calMonths"></div>
     <div class="cal-legend">
       <span>💗 <b lang="ko">시작한 날 · el día que empezó</b></span>
       <span>🌙 <b lang="ko">첫 한 달 · nuestro primer mes</b></span>
     </div>
-  </div>
-</div>
-
-<div id="miniPlayer">
-  <button type="button" class="mp-bar" id="mpBar" aria-expanded="false">
-    <span class="mp-note" aria-hidden="true">♪</span>
-    <span class="mp-txt">
-      <b class="kr" lang="ko">우리 노래</b>
-      <i lang="es">nuestra playlist</i>
-    </span>
-    <span class="mp-chev" aria-hidden="true">▾</span>
-  </button>
-  <div class="mp-body">
-    <iframe id="plFrame" title="Spotify"
-      src="https://open.spotify.com/embed/playlist/5dmeP203AImnqheTNiXHjx?utm_source=generator&amp;theme=0"
-      allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"></iframe>
-    <a class="mp-link" href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx"
-       target="_blank" rel="noopener"><span lang="ko">스포티파이에서 열기</span> · abrir en Spotify ↗</a>
-    <p class="mp-fallback">
-      <span class="kr" lang="ko">여기선 플레이어가 안 열려.</span>
-      <a href="https://open.spotify.com/playlist/5dmeP203AImnqheTNiXHjx" target="_blank" rel="noopener">Abrir en Spotify →</a>
-    </p>
   </div>
 </div>
 
@@ -942,11 +954,15 @@
     <h1><span class="kr" lang="ko">같은 달 아래, 한 달</span></h1>
     <p class="sub">
       <span class="kr" lang="ko">만 킬로미터가 넘는 거리도, 매일 밤 같은 하늘을 바라보는 우리를 갈라놓을 순 없어.</span>
-      <span class="cap-es" lang="es">Casi once mil kilómetros no alcanzan para separarnos cuando, cada noche, miramos hacia el mismo cielo.</span>
+      <span class="cap-es" lang="es">Más de once mil kilómetros no alcanzan para separarnos cuando, cada noche, miramos hacia el mismo cielo.</span>
     </p>
 
     <div class="badge-wrap">
       <button type="button" class="badge" id="dayBadge" lang="ko" aria-haspopup="dialog">오늘로 <strong id="dayCount">한 달째</strong> 📅</button>
+      <div class="chips">
+        <span class="chip" id="chipJuntos"></span>
+        <span class="chip" id="chipProx" hidden></span>
+      </div>
       <p class="badge-cap" lang="es">tócalo para ver todos nuestros días</p>
     </div>
 
@@ -961,8 +977,8 @@
     <p class="eyebrow" lang="ko">지금 이 순간</p>
     <h2 class="kr-h2"><span class="kr" lang="ko">두 도시, 같은 1분</span></h2>
     <p class="section-cap">
-      <span class="kr" lang="ko">너와 나 사이엔 약 <b style="color:var(--lavender-500)">11,420km</b>가 있어 — 그래도 우리에겐 늘 맞아떨어지는 게 하나 있어, 바로 지금 이 시각이야.</span>
-      <span class="cap-es" lang="es">Entre tú y yo hay ~11,420 km — y aun así, siempre coincidimos en algo: la hora exacta.</span>
+      <span class="kr" lang="ko">너와 나 사이엔 <b style="color:var(--lavender-500)">11,420km</b>가 있어. 그래도 늘 똑같은 게 하나 있어 — 우리가 함께 있는 바로 이 순간.</span>
+      <span class="cap-es" lang="es">Entre tú y yo hay 11,420 km. Y aun así hay algo que siempre es igual: este mismo instante.</span>
     </p>
     <div class="clocks">
       <div class="clock-card">
@@ -1088,7 +1104,7 @@
         </div>
       </div>
 
-      <p class="ls-hint" id="lsHint"><span lang="ko">리본을 잡고 당겨봐</span><i lang="es">jala el listón con el mouse</i></p>
+      <p class="ls-hint" id="lsHint"><span lang="ko">리본을 잡고 당겨봐</span><i lang="es">jala el listón</i></p>
     </div>
 
     <div class="letter-paper" id="letterPaper" hidden>
@@ -1160,22 +1176,31 @@
     <p class="pc-hint" lang="ko">가운데 엽서를 누르면 뒤집혀 · toca la del centro para voltearla</p>
   </section>
 
-
-  <!-- ============================ PLAYLIST ============================ -->
-  <section id="playlist">
-    <p class="eyebrow" lang="ko">우리 노래</p>
-    <h2 class="kr-h2"><span class="kr" lang="ko">네가 만든 플레이리스트</span></h2>
+  <!-- ============================ LINTERNAS DE DESEOS ============================ -->
+  <section id="wishes">
+    <p class="eyebrow" lang="ko">소원 등불</p>
+    <h2 class="kr-h2"><span class="kr" lang="ko">소원을 적어서 띄워봐</span></h2>
     <p class="section-cap">
-      <span class="kr" lang="ko">네가 골라준 노래들. 여기서 같이 듣자.</span>
-      <span class="cap-es" lang="es">Las canciones que tú elegiste. Para escucharlas aquí, juntos.</span>
+      <span class="kr" lang="ko">바라는 것, 하고 싶은 말, 아무거나 괜찮아. 적어서 띄우면 계속 저 위에 떠 있을 거야.</span>
+      <span class="cap-es" lang="es">Un deseo, algo que quieras decir, lo que sea. Escríbelo y suéltalo: se queda volando ahí arriba.</span>
     </p>
-    <button type="button" class="pl-open" id="plOpen">
-      <span class="pl-note" aria-hidden="true">♪</span>
-      <span class="pl-txt">
-        <b class="kr" lang="ko">여기 눌러서 우리 노래 틀기</b>
-        <i lang="es">Pon nuestra playlist y déjala sonando mientras lees</i>
-      </span>
-    </button>
+
+    <div class="wish-sky" id="wishSky">
+      <div class="wish-empty" id="wishEmpty">
+        <span class="kr" lang="ko">아직 아무것도 안 띄웠어.</span>
+        <i lang="es">Todavía no has soltado ninguna. Escribe la primera.</i>
+      </div>
+    </div>
+
+    <div class="wish-form">
+      <textarea id="wishText" maxlength="60" rows="2" lang="ko"
+        placeholder="소원을 적어봐… · escribe tu deseo…" aria-label="소원 / tu deseo"></textarea>
+      <button type="button" class="wish-send" id="wishSend" disabled lang="ko">띄우기 · soltarla</button>
+    </div>
+    <p class="wish-foot">
+      <span id="wishCount"></span>
+      <button type="button" id="wishUndo" hidden lang="ko">마지막 거 지우기 · borrar la última</button>
+    </p>
   </section>
 
   <!-- ============================ REUNION ============================ -->
@@ -1218,8 +1243,8 @@
     </div>
 
     <div class="slider-row">
-      <input type="range" id="dist" min="0" max="100" value="100" step="1" aria-label="거리 줄이기 / acercar la distancia">
-      <p class="slider-label" lang="ko">서울 ← → 멕시코 · desliza para acercarnos</p>
+      <input type="range" id="dist" min="0" max="100" value="0" step="1" aria-label="거리 줄이기 / acercar la distancia">
+      <p class="slider-label" lang="ko">오른쪽으로 끝까지 밀어봐 · deslízalo hasta la derecha</p>
     </div>
 
     <p class="reunion-caption" id="reunionCaption"></p>
@@ -1250,8 +1275,8 @@
         </div>
       </div>
     </div>
-    <p class="final-line"><span class="kr" lang="ko">언제나, 이 같은 달 아래에서</span></p>
-    <p class="cap-es" lang="es">siempre, bajo esta misma luna 🌙🩷</p>
+    <p class="final-line"><span class="kr" lang="ko">언제나, 같은 달 아래에서</span></p>
+    <p class="cap-es" lang="es">siempre, bajo esta misma luna&nbsp;🌙🩷</p>
   </section>
 
 </main>
@@ -1752,7 +1777,12 @@
   var moonStage = document.getElementById('moonStage');
   var sayEl = document.getElementById('usagiSay');
 
-  var sayLines = ['보고 싶었어!','헤헤… 간지러워','오늘 한 달이야 🌙','너 생각하고 있었어','한 번 더 눌러줘','라벤더 줄까? 💜','나 여기 있어, 항상'];
+  /* se arma en cada toque: la frase del aniversario solo aparece el día que de verdad cumplimos mes */
+  function lineasUsagi(){
+    var l = ['보고 싶었어!','헤헤… 간지러워','너 생각하고 있었어','한 번 더 눌러줘','라벤더 줄까? 💜','나 여기 있어, 항상'];
+    if(esAniversarioMensual()) l.splice(2, 0, '오늘 ' + textoAniversario(mesesJuntos()) + '이야 🌙');
+    return l;
+  }
   var sayIdx = 0, sayTimer = null;
 
   document.getElementById('usagiBtn').addEventListener('click', function(){
@@ -1764,7 +1794,8 @@
       heroBody.classList.add('hopping');
     }
     heartBurst(moonStage, 3);
-    sayEl.textContent = sayLines[sayIdx++ % sayLines.length];
+    var L = lineasUsagi();
+    sayEl.textContent = L[sayIdx++ % L.length];
     sayEl.classList.add('show');
     clearTimeout(sayTimer);
     sayTimer = setTimeout(function(){
@@ -1789,7 +1820,7 @@
     if(!scene) return;
 
     var HINTS = {
-      ribbon: ['리본을 잡고 당겨봐', 'jala el listón con el mouse'],
+      ribbon: ['리본을 잡고 당겨봐', 'jala el listón'],
       pull:   ['이제 편지를 위로 꺼내봐', 'ahora saca la carta hacia arriba'],
       unfold: ['눌러서 펼쳐봐', 'tócala para desdoblarla'],
       open:   ['', '']
@@ -1909,11 +1940,90 @@
   }
   var CAL_START = new Date(Date.UTC(2026, 6, 31));   /* 31 de julio, en su calendario */
 
+  /* ================= nuestras fechas: meses cumplidos y D-días ================= */
+  var INICIO = new Date(Date.UTC(2026, 6, 31));      /* 31 de julio, en su calendario */
+  var KMESES = ['','한','두','세','네','다섯','여섯','일곱','여덟','아홉','열','열한','열두'];
+
+  /* el primer día cuenta como el día 1, que es como se cuenta en Corea */
+  function diasJuntos(hoy){
+    return Math.round(((hoy || seoulToday()) - INICIO) / 86400000) + 1;
+  }
+  /* el 31 no existe en todos los meses: ahí el aniversario cae el último día */
+  function diaAniversario(anio, mes){
+    var ultimo = new Date(Date.UTC(anio, mes + 1, 0)).getUTCDate();
+    return Math.min(INICIO.getUTCDate(), ultimo);
+  }
+  function mesesJuntos(hoy){
+    hoy = hoy || seoulToday();
+    var m = (hoy.getUTCFullYear() - INICIO.getUTCFullYear()) * 12 +
+            (hoy.getUTCMonth() - INICIO.getUTCMonth());
+    if(hoy.getUTCDate() < diaAniversario(hoy.getUTCFullYear(), hoy.getUTCMonth())) m--;
+    return m;
+  }
+  function esAniversarioMensual(hoy){
+    hoy = hoy || seoulToday();
+    return mesesJuntos(hoy) >= 1 &&
+           hoy.getUTCDate() === diaAniversario(hoy.getUTCFullYear(), hoy.getUTCMonth());
+  }
+  function textoMeses(m){ return m <= 12 ? (KMESES[m] + ' 달') : (m + '개월'); }
+  /* al año se dice 1주년, no "doce meses" */
+  function textoAniversario(m){
+    return (m > 0 && m % 12 === 0) ? (m / 12) + '주년' : textoMeses(m);
+  }
+
+  /* fecha del día número n (n = 1 es el primer día) */
+  function fechaDelDia(n){
+    return new Date(INICIO.getTime() + (n - 1) * 86400000);
+  }
+  function fechaDelMes(m){
+    var anio = INICIO.getUTCFullYear(), mes = INICIO.getUTCMonth() + m;
+    anio += Math.floor(mes / 12); mes = ((mes % 12) + 12) % 12;
+    return new Date(Date.UTC(anio, mes, diaAniversario(anio, mes)));
+  }
+
+  function hitos(){
+    var l = [];
+    [50,100,200,300,500,1000].forEach(function(n){
+      l.push({ f: fechaDelDia(n), kr: n + '일', es: 'nuestros ' + n + ' días' });
+    });
+    [3,6,9].forEach(function(m){
+      l.push({ f: fechaDelMes(m), kr: textoMeses(m), es: 'nuestros ' + m + ' meses' });
+    });
+    [1,2,3].forEach(function(a){
+      l.push({ f: fechaDelMes(a*12), kr: a + '주년', es: a === 1 ? 'nuestro primer año' : 'nuestros ' + a + ' años' });
+    });
+    l.sort(function(a,b){ return a.f - b.f; });
+    return l;
+  }
+  /* los próximos n hitos que todavía no llegan (el de hoy cuenta como D-DAY) */
+  function proximosHitos(n){
+    var hoy = seoulToday();
+    return hitos().filter(function(h){ return h.f >= hoy; }).slice(0, n).map(function(h){
+      h.d = Math.round((h.f - hoy) / 86400000);
+      return h;
+    });
+  }
+  function fechaLarga(f){
+    return f.getUTCFullYear() + '년 ' + (f.getUTCMonth()+1) + '월 ' + f.getUTCDate() + '일';
+  }
+
   function buildCalendar(){
     var host = document.getElementById('calMonths');
     var today = seoulToday();
     var days = Math.round((today - CAL_START) / 86400000) + 1;
     document.getElementById('calCount').textContent = days + '일 · ' + days + (days === 1 ? ' día' : ' días');
+
+    /* los siguientes cuatro aniversarios, con su D-día */
+    var lista = document.getElementById('calHitos');
+    if(lista){
+      lista.innerHTML = proximosHitos(4).map(function(h){
+        return '<li' + (h.d === 0 ? ' class="hoy"' : '') + '>' +
+                 '<b>' + (h.d === 0 ? 'D-DAY' : 'D-' + h.d) + '</b>' +
+                 '<span lang="ko">' + h.kr + '</span>' +
+                 '<i>' + fechaLarga(h.f) + '</i>' +
+               '</li>';
+      }).join('');
+    }
 
     /* el día del primer mes: mismo número del mes siguiente */
     var MONTH_DAY = new Date(Date.UTC(CAL_START.getUTCFullYear(), CAL_START.getUTCMonth()+1, CAL_START.getUTCDate()));
@@ -1987,11 +2097,27 @@
   tickClocks(); setInterval(tickClocks, 1000);
 
   /* ================= day counter ================= */
-  var START = new Date('2026-07-31T00:00:00+09:00');
   function updateDayCount(){
-    var days = Math.floor((new Date() - START)/86400000);
-    var el = document.getElementById('dayCount');
-    el.textContent = days < 31 ? (Math.max(days,1)+'일째') : (Math.floor(days/30.44)+'개월째');
+    var hoy = seoulToday();
+    var meses = mesesJuntos(hoy);
+    document.getElementById('dayCount').textContent =
+      meses < 1 ? (diasJuntos(hoy) + '일째')
+                : (meses % 12 === 0 ? textoAniversario(meses) : textoMeses(meses) + '째');
+    pintarHitos(hoy);
+  }
+
+  /* las dos pastillas debajo del botón: días juntos y el próximo aniversario */
+  function pintarHitos(hoy){
+    var juntos = document.getElementById('chipJuntos');
+    var prox   = document.getElementById('chipProx');
+    if(!juntos || !prox) return;
+    juntos.innerHTML = '<b>D+' + diasJuntos(hoy) + '</b> <span>함께한 날 · juntos</span>';
+    var p = proximosHitos(1)[0];
+    if(!p){ prox.hidden = true; return; }
+    prox.hidden = false;
+    prox.innerHTML = p.d === 0
+      ? '<b>D-DAY</b> <span>' + p.kr + ' · ¡hoy!</span>'
+      : '<b>D-' + p.d + '</b> <span>' + p.kr + ' · ' + p.es + '</span>';
   }
   updateDayCount(); setInterval(updateDayCount, 60000);
 
@@ -2155,7 +2281,7 @@
     {k:'pijamada',tk:'파자마 파티', te:'una pijamada', kr:'커플 잠옷 입고, 새벽까지 쓸데없는 얘기 하기.',            es:'Pijamas a juego, y hablar tonterías hasta la madrugada.',                em:['🌙','🧸','💤']},
     {k:'cafe',    tk:'디저트 카페',  te:'café y postres', kr:'예쁜 카페 찾아가서, 맛있는 디저트 하나씩 다 나눠 먹기.', es:'Buscar una cafetería bonita y compartir todos los postres ricos.',      em:['🍰','🧁','☕','🍮']},
     {k:'outfits', tk:'커플룩',      te:'ropa a juego', kr:'커플룩 맞춰 입고, 사람들 앞에서 하나도 안 부끄러워하기.',  es:'Vestirnos a juego y no darnos ni tantita pena.',                         em:['👕','👗','💞','🧦']},
-    {k:'photobooth', tk:'인생네컷', te:'photo booth',  kr:'네 컷 다 웃긴 표정으로 찍고, 한 장씩 나눠 갖기.',          es:'Las cuatro fotos con caras ridículas, y una para cada quien.',           em:['📸','✨','🖼️','😆']},
+    {k:'photobooth', tk:'인생네컷', te:'la cabina de fotos',  kr:'네 컷 다 웃긴 표정으로 찍고, 한 장씩 나눠 갖기.',          es:'Las cuatro fotos con caras ridículas, y una para cada quien.',           em:['📸','✨','🖼️','😆']},
     {k:'pintar',  tk:'그림 그리기', te:'pintar juntos', kr:'같이 그림 그리기. 서로 그려주고, 못 그려도 웃기.',         es:'Pintar juntos, retratarnos, y reírnos aunque nos salga horrible.',       em:['🎨','🖌️','🌈','🖼️']},
     {k:'cena',    tk:'저녁 식사',   te:'una cena',     kr:'촛불 하나, 접시 두 개, 그리고 너.',                        es:'Una vela, dos platos, y tú.',                                           em:['🍝','🍷','🕯️']},
     {k:'baile',   tk:'춤',          te:'bailar',       kr:'네 방에서든 어디서든, 노래 하나에 같이 흔들기.',           es:'Bailar una canción, en tu cuarto o donde sea.',                          em:['💃','🎶','✨']},
@@ -2344,6 +2470,121 @@
 
 
   /* ================= reunion ================= */
+
+  /* ================= linternas de deseos ================= */
+  (function wishes(){
+    var sky   = document.getElementById('wishSky');
+    var empty = document.getElementById('wishEmpty');
+    var box   = document.getElementById('wishText');
+    var send  = document.getElementById('wishSend');
+    var undo  = document.getElementById('wishUndo');
+    var count = document.getElementById('wishCount');
+    if(!sky || !box || !send) return;
+
+    var KEY = 'nuestra-luna:wishes';
+    var MAX = 12;
+    var TONOS = [
+      ['#fff4d2','#ffce7c','#e79457'],
+      ['#ffeed0','#ffc78d','#e0895f'],
+      ['#fff7e3','#ffd89c','#e5a262'],
+      ['#ffe7d4','#f9bd8a','#dd8763']
+    ];
+
+    function leer(){
+      try{
+        var raw = localStorage.getItem(KEY);
+        var arr = raw ? JSON.parse(raw) : [];
+        if(Object.prototype.toString.call(arr) !== '[object Array]') return [];
+        return arr.slice(-MAX);          /* el tope también al leer, no solo al escribir */
+      }catch(e){ return []; }
+    }
+    function guardar(arr){
+      try{ localStorage.setItem(KEY, JSON.stringify(arr)); }catch(e){}
+    }
+    function escapar(t){
+      return String(t).replace(/[&<>"']/g, function(c){
+        return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+      });
+    }
+
+    var lista = leer();
+    var uid = 0;
+
+    function farol(texto, i, total, recien){
+      var g = TONOS[i % TONOS.length];
+      var id = 'wg' + (uid++);
+      var el = document.createElement('div');
+      el.className = 'wish' + (recien ? ' recien' : '');
+      /* repartidas a lo ancho, sin encimarse en los bordes */
+      /* el % es el borde izquierdo: dejamos margen para el ancho del farol y el vaivén */
+      el.style.left = (6 + (total > 1 ? (i / (total - 1)) * 62 : 30) + (Math.random()*6 - 3)).toFixed(1) + '%';
+      var dur = (26 + Math.random()*14).toFixed(1);
+      el.style.animationDuration = dur + 's, ' + (5 + Math.random()*3).toFixed(1) + 's';
+      if(!recien){
+        el.style.animationDelay = (-(Math.random() * dur)).toFixed(1) + 's, ' +
+                                  (Math.random()*-4).toFixed(1) + 's';
+      }
+      el.innerHTML =
+        '<svg viewBox="0 0 40 62" aria-hidden="true">' +
+          '<defs><radialGradient id="' + id + '" cx="50%" cy="58%" r="64%">' +
+            '<stop offset="0%" stop-color="' + g[0] + '"/>' +
+            '<stop offset="62%" stop-color="' + g[1] + '"/>' +
+            '<stop offset="100%" stop-color="' + g[2] + '"/>' +
+          '</radialGradient></defs>' +
+          '<ellipse cx="20" cy="30" rx="19.5" ry="23" fill="url(#' + id + ')" opacity=".26"/>' +
+          '<path d="M20,6 C31,6 35,16 35,28 C35,40 29,50 20,54 C11,50 5,40 5,28 C5,16 9,6 20,6 Z" ' +
+            'fill="url(#' + id + ')" stroke="' + g[2] + '" stroke-width="1.3" opacity=".97"/>' +
+          '<path d="M20,8.5 C29,8.5 32.6,17 32.6,27.5 C32.6,33 31.4,37.6 29.6,41 L10.4,41 ' +
+            'C8.6,37.6 7.4,33 7.4,27.5 C7.4,17 11,8.5 20,8.5 Z" fill="#fff8e6" opacity=".62"/>' +
+          '<rect x="14" y="3" width="12" height="4" rx="2" fill="' + g[2] + '" opacity=".8"/>' +
+          '<ellipse cx="20" cy="47" rx="4.6" ry="5.6" fill="#fffdf3" opacity=".92"/>' +
+          '<path d="M14,54 q6 6 12 0" fill="none" stroke="' + g[2] + '" stroke-width="1.2" opacity=".6"/>' +
+        '</svg>' +
+        '<span class="wish-text">' + escapar(texto) + '</span>';
+      return el;
+    }
+
+    function pintar(recienIdx){
+      /* solo quitamos los faroles; el mensaje de vacío se queda */
+      var viejos = sky.querySelectorAll('.wish');
+      for(var k=0;k<viejos.length;k++) viejos[k].remove();
+      lista.forEach(function(w, i){
+        sky.appendChild(farol(w.t, i, lista.length, i === recienIdx));
+      });
+      empty.hidden = lista.length > 0;
+      undo.hidden  = lista.length === 0;
+      count.textContent = lista.length
+        ? lista.length + (lista.length === 1 ? '개의 소원 · un deseo volando'
+                                             : '개의 소원 · deseos volando')
+        : '';
+    }
+
+    function soltar(){
+      var t = box.value.trim();
+      if(!t) return;
+      lista.push({ t: t, d: new Date().toISOString().slice(0,10) });
+      if(lista.length > MAX) lista.shift();
+      guardar(lista);
+      box.value = '';
+      send.disabled = true;
+      pintar(lista.length - 1);
+      var nueva = sky.querySelector('.wish.recien');
+      if(nueva) popBurst(nueva, ['🏮','✨','🌙']);
+    }
+
+    box.addEventListener('input', function(){ send.disabled = !box.value.trim(); });
+    box.addEventListener('keydown', function(e){
+      if(e.key === 'Enter' && !e.shiftKey){ e.preventDefault(); soltar(); }
+    });
+    send.addEventListener('click', soltar);
+    undo.addEventListener('click', function(){
+      lista.pop(); guardar(lista); pintar(-1);
+    });
+
+    pintar(-1);
+  })();
+
+  /* ================= reencuentro ================= */
   var slider=document.getElementById('dist');
   var stage=document.getElementById('stage');
   var kmValue=document.getElementById('kmValue');
@@ -2382,7 +2623,8 @@
       caption.innerHTML = v>66 ? CAP_FAR : (v>22 ? CAP_MID : CAP_NEAR);
     }
   }
-  slider.addEventListener('input',function(){ render(parseInt(slider.value,10)); });
+  /* el 0 del control queda a la izquierda: se arrastra hacia la derecha para acercarlos */
+  slider.addEventListener('input',function(){ render(100 - parseInt(slider.value,10)); });
   render(100);
 
   /* ================= creador de personaje ================= */
@@ -2405,7 +2647,7 @@
   }
 
   var PROMPTS = {
-    her: ['마음에 드는 대로 골라줘. 이게 너야.', 'Este eres tú — hazlo como más te guste.'],
+    her: ['마음에 드는 대로 골라줘. 이게 너야.', 'Esta eres tú — hazla como más te guste.'],
     him: ['너의 예쁜 세상에서 나는 어떤 모습일까?', '¿Cómo me imaginas en tu bello mundo?']
   };
 
@@ -2508,32 +2750,6 @@
     refreshCreator();
   });
 
-
-  /* ================= playlist: aviso si el embed queda bloqueado ================= */
-  (function(){
-    var mp = document.getElementById('miniPlayer');
-    var bar = document.getElementById('mpBar');
-    var fr = document.getElementById('plFrame');
-    if(!mp || !bar) return;
-
-    function setOpen(on){
-      mp.classList.toggle('open', on);
-      bar.setAttribute('aria-expanded', on ? 'true' : 'false');
-      if(on) mp.classList.add('playing');
-    }
-    bar.addEventListener('click', function(){ setOpen(!mp.classList.contains('open')); });
-
-    var openBtn = document.getElementById('plOpen');
-    if(openBtn) openBtn.addEventListener('click', function(){
-      setOpen(true);
-      mp.scrollIntoView({block:'nearest'});
-    });
-
-    /* si el visor bloquea el iframe, ofrecemos el enlace */
-    var loaded = false;
-    fr.addEventListener('load', function(){ loaded = true; });
-    setTimeout(function(){ if(!loaded) mp.classList.add('blocked'); }, 3500);
-  })();
 
   (function decorateCreator(){
     var sky = document.getElementById('crSky');
